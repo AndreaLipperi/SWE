@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>LOGIN INGROSSO</title>
+    <style>
+        body {
+            background-color: #ccc;
+        }
+        form {
+            font-size: 2em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #btn{
+            display: inline-flex;
+        }
+        #login_btn, #registration_btn {
+            font-size: 0.8em;
+        }
+        @media (max-width: 1060px){
+            form {
+                font-size: 1.5em;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <form name="login_form" method="post">
+        <h1>BENVENUTO</h1>
+        <div id="btn">
+            <p><input type="submit" id="login_btn" value="Accedi">
+            <input type="submit" id="registration_btn" value="Registrati"></p>
+        </div>
+    </form>
+    <script>
+        document.getElementById("login_btn").addEventListener("click", function(event) {
+            event.preventDefault(); // Prevent default form submission
+            redirect("login_page.html");
+        });
+
+        document.getElementById("registration_btn").addEventListener("click", function(event) {
+            event.preventDefault(); // Prevent default form submission
+            redirect("registration_page.html");
+        });
+
+        function redirect(link) {
+            // Reindirizza alla pagina specificata
+            window.location.href = link;
+        }
+    </script>
+</body>
+</html>
