@@ -67,7 +67,6 @@
 </head>
 <body>
 <form name="orders" method="post">
-    {% csrf_token %}
     <h1>ECCO LO STORICO DEI TUOI ORDINI RICEVUTI</h1>
     <div id="datas">
         <div class="grid_titoli">
@@ -77,22 +76,16 @@
             <div class="grid_item_titoli"></div>
         </div>
         <div class="grid_dati">
-            {% for orders_item in orders_data|dictsortreversed:"data_order" %}
-                <div class="grid_item_dati">{{ orders_item.data_order }}</div>
+            <div class="grid_item_dati">{{ orders_item.data_order }}</div>
                 <div class="grid_item_dati">{{ orders_item.customer }}</div>
                 <div class="grid_item_dati">{{ orders_item.status_order }}</div>
                 <div class="grid_item_dati"><a href="{% url 'order_details_provider' order_id=orders_item.order_id %}">Vedi dettagli ordine</a></div>
-            {% endfor %}
+
         </div>
     </div>
     <div id="btn">
         <input type="submit" id="back_btn" value="INDIETRO" onclick="setFormAction(event, '{% url 'homepage_provider' %}')">
     </div>
-    {% if message %}
-        <script>
-            alert("{{ message }}");
-        </script>
-    {% endif %}
 </form>
 </body>
 </html>

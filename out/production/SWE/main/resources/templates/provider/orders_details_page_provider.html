@@ -108,35 +108,29 @@
             <div class="grid_item_titoli"></div>
         </div>
         <div class="grid_dati">
-            {% for order_details_item in orders_details_data %}
-                <div class="grid_item_dati">{{ order_details_item.quantita }}</div>
+                <div class="grid_item_dati"></div>
                 <div class="grid_item_dati">
-                    <span id="totale" {% if order_details_item.prezzo_totale_scontato != "0.00" %}style="color: red; text-decoration: line-through;"{% endif %}>
-                        €<span class="prezzo_totale">{{ order_details_item.prezzo_totale }}</span>
+                    <span id="totale" >
+                        €<span class="prezzo_totale"></span>
                     </span>
-                    <span id="scontato" {% if order_details_item.prezzo_totale_scontato == "0.00" %} style="display:none;" {% endif %}>
-                        €<span class="prezzo_totale_scontato">{{ order_details_item.prezzo_totale_scontato }}</span>
+                    <span id="scontato">
+                        €<span class="prezzo_totale_scontato"></span>
                     </span>
                 </div>
-                <div class="grid_item_dati">{{ order_details_item.descrizione }}</div>
-                <div class="grid_item_dati">{{ order_details_item.sconto }}</div>
-                <div class="grid_item_dati"><span class="status">{{ order_details_item.status }}</span></div>
-                <div class="grid_item_dati"><a class="accept_link" href="{% url 'accept_deny_product' order_detail_id=order_details_item.order_details_id control=1 %}">Accetta ordine prodotto</a></div>
-                <div class="grid_item_dati"><a class="deny_link" href="{% url 'accept_deny_product' order_detail_id=order_details_item.order_details_id control=2 %}">Rifiuta ordine prodotto</a></div>
-                <div class="grid_item_dati" id="other_datas"><input type="text" name="order_id" value="{{ order_details_item.order_id }}"></div>
-            {% endfor %}
+                <div class="grid_item_dati"></div>
+                <div class="grid_item_dati"></div>
+                <div class="grid_item_dati"><span class="status"></span></div>
+                <div class="grid_item_dati"><a class="accept_link" href="">Accetta ordine prodotto</a></div>
+                <div class="grid_item_dati"><a class="deny_link" href="">Rifiuta ordine prodotto</a></div>
+                <div class="grid_item_dati" id="other_datas"><input type="text" name="order_id" value=""></div>
+
         </div>
         COSTO TOTALE ORDINE: <span id="total_cost"></span>
         <div id="btn">
-            <input type="submit" id="accept_order" value="ACCETTA ORDINE" onclick="setFormAction(event, '{% url 'accept_deny_order' control=1 %}')" title="Da questo bottone renderai accettati tutti i prodotti ancora in sospeso">
-            <input type="submit" id="deny_order" value="RIFIUTA ORDINE" onclick="setFormAction(event, '{% url 'accept_deny_order' control=2 %}')" title="Da questo bottone renderai rifiutati tutti i prodotti ancora in sospeso">
-            <input type="submit" id="back_btn" value="INDIETRO" onclick="setFormAction(event, '{% url 'orders_history_provider' %}')">
+            <input type="submit" id="accept_order" value="ACCETTA ORDINE"  title="Da questo bottone renderai accettati tutti i prodotti ancora in sospeso">
+            <input type="submit" id="deny_order" value="RIFIUTA ORDINE"  title="Da questo bottone renderai rifiutati tutti i prodotti ancora in sospeso">
+            <input type="submit" id="back_btn" value="INDIETRO" >
         </div>
-        {% if message %}
-            <script>
-                alert("{{ message }}");
-            </script>
-        {% endif %}
     </div>
 </form>
 <script>

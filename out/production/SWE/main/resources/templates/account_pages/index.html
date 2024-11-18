@@ -27,28 +27,30 @@
         }
 
     </style>
-    <script>
-        function setFormAction(event, actionUrl) {
-            event.preventDefault(); // Impedisce il comportamento di submit di default
-            var form = event.target.form; // Ottiene il form relativo al pulsante cliccato
-            form.action = actionUrl; // Imposta dinamicamente l'attributo action
-            form.submit(); // Invia il form
-        }
-    </script>
 </head>
 <body>
     <form name="login_form" method="post">
-        {% csrf_token %}
         <h1>BENVENUTO</h1>
         <div id="btn">
-            <p><input type="submit" id="login_btn" value="Accedi" onclick="setFormAction(event, '{% url 'login' %}')">
-            <input type="submit" id="registration_btn" value="Registrati" onclick="setFormAction(event, '{% url 'registration' %}')"></p>
+            <p><input type="submit" id="login_btn" value="Accedi">
+            <input type="submit" id="registration_btn" value="Registrati"></p>
         </div>
     </form>
-    {% if message %}
-        <script>
-            alert("{{ message }}");
-        </script>
-    {% endif %}
+    <script>
+        document.getElementById("login_btn").addEventListener("click", function(event) {
+            event.preventDefault(); // Prevent default form submission
+            redirect("login_page.html");
+        });
+
+        document.getElementById("registration_btn").addEventListener("click", function(event) {
+            event.preventDefault(); // Prevent default form submission
+            redirect("registration_page.html");
+        });
+
+        function redirect(link) {
+            // Reindirizza alla pagina specificata
+            window.location.href = link;
+        }
+    </script>
 </body>
 </html>

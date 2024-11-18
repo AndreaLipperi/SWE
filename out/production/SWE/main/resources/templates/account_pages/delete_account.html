@@ -56,9 +56,9 @@
     </style>
 </head>
 <body>
-    <form name="delete_account" action ="{% url 'delete_account' %}" method="post">
-        {% csrf_token %}
-        <h1>{{ username }} PER CONFERMARE LA CANCELLAZIONE DEL TUO ACCOUNT <br> INSERISCI LA PASSOWRD</h1>
+    <form name="delete_account" action ="" method="post">
+
+        <h1> PER CONFERMARE LA CANCELLAZIONE DEL TUO ACCOUNT <br> INSERISCI LA PASSOWRD</h1>
         <h3><b>N.B.</b> non ti sarà possibile cancellare l'account se hai ancora ordini in sospeso <br> annulla gli ordini prima di cancellarlo</h3>
 
         <p><span class="txt">PASSWORD</span><input type="password" name="psw" id="psw" placeholder="password..." oninput="compare_psw()" required><input type="button" id="mostra_nascondi_psw" value="Mostra Password" onclick="showHidePsw('psw', 'mostra_nascondi_psw')"></p>
@@ -71,19 +71,7 @@
     </form>
     <script>
         var submitButton = document.getElementById("delete_btn");
-        function setFormAction(event) {
-            event.preventDefault(); // Impedisce il comportamento di submit di default
-            var form = event.target.form; // Ottiene il form relativo al pulsante cliccato
-            var type = document.getElementById("type").value;
-            var actionUrl;
-            if (type==="C") {
-                actionUrl = "{% url 'homepage_client' %}";
-            } else {
-                actionUrl = "{% url 'homepage_provider' %}";
-            }
-            form.action = actionUrl; // Imposta dinamicamente l'attributo action
-            form.submit(); // Invia il form
-        }
+
         function compare_psw() {
             var psw = document.getElementById("psw").value;
             var conf_psw = document.getElementById("conf_psw").value;

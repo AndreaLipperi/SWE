@@ -71,17 +71,15 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<form name="registration_form" action="{% url 'insert_product' %}" method="POST">
-    {% csrf_token %}
+<form name="registration_form"  method="POST">
+
     <h1>INSERISCI I DATI</h1>
     <div id="datas">
         <div id="choices">
             <label for="selezione">Scegli una categoria specifica:</label>
             <select id="selezione" name="selezione">
                 <option value="">Seleziona</option>
-                {% for option_data_cat in options_data_cat %}
-                    <option value="{{ option_data_cat.name }}">{{ option_data_cat.name }}</option>
-                {% endfor %}
+                    <option value="">{{ option_data_cat.name }}</option>
             </select>
             <label for="subcategories">Scegli una sottocategoria:</label>
             <select id="subcategories" name="subcategories" required>
@@ -92,9 +90,7 @@
         <label for="unita_misura">Scegli una unità di misura:</label>
         <select id="unita_misura" name="unita_misura" required>
             <option value="">Seleziona</option>
-            {% for option_data_meausure in options_data_meausure %}
-                <option value="{{ option_data_meausure.id }}">{{ option_data_meausure.name }}</option>
-            {% endfor %}
+                <option value=""></option>
         </select><br><br><br>
         Prezzo in € <input type="number"  id="price" name="price" min="0.01" step="0.01" value="0.00" required><br>
         Descrizione<input type="text" name="desc" value="" required><br>
@@ -113,29 +109,6 @@
         form.action = actionUrl; // Imposta dinamicamente l'attributo action
         form.submit(); // Invia il form
     }
-    $(document).ready(function() {
-        $('#selezione').change(function() {
-            var categoryName = $(this).val();
-            if ($(this).val() === '') {
-                // Reindirizza alla homepage
-                window.location.href = '/insert_product_page/'; // Assicurati di sostituire '/' con l'URL effettivo della tua homepage
-            }
-            $.ajax({
-                url: '/get_subcategories/',  // Assicurati che questo URL sia corretto
-                data: {
-                    'category': categoryName
-                },
-                success: function(data) {
-                    var $subselect = $('#subcategories');
-                    $subselect.empty();
-                    $subselect.append('<option value="">Seleziona</option>');
-                    $.each(data, function(index, suboption) {
-                        $subselect.append('<option value="' + suboption.id + '">' + suboption.name + '</option>');
-                    });
-                }
-            });
-        });
-    });
 </script>
 </body>
 </html>

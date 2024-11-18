@@ -69,11 +69,11 @@
     </style>
 </head>
 <body>
-    <form name="update_password" action="{% url 'update_psw' %}" method="post">
-        {% csrf_token %}
-        <input type="text" name="type" id="type" value="{{ user_type }}">
-        <input type="text" name="username" id="username" value="{{ username }}">
-        <h1>{{ username }} INSERISCI NUOVA PASSWORD</h1>
+    <form name="update_password" method="post">
+
+        <input type="text" name="type" id="type" value="">
+        <input type="text" name="username" id="username" value="">
+        <h1> INSERISCI NUOVA PASSWORD</h1>
         <div id="datas">
             <p><span class="txt">PASSWORD</span><input type="password" name="psw" id="psw" placeholder="password..." oninput="control_psw(); compare_psw()" required><input type="button" id="mostra_nascondi_psw" value="Mostra Password" onclick="showHidePsw('psw', 'mostra_nascondi_psw')">
             <div id="controllo_psw">
