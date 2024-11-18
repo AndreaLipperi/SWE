@@ -62,16 +62,15 @@
     </script>    
 </head>
 <body>
-    <form name="modify_product" action="{% url 'update_datas_product' %}" method="post">
-        {% csrf_token %}
+    <form name="modify_product" method="post">
+
         <h1>MODIFICA I DATI</h1>
-        {% for store_item in store_data %}
-            Quantità disponibile in {{ store_item.unita_misura }} <input type="number"  id="quantity" name="quantity" min="1" step="1" value="{{ store_item.quantita_disponibile }}" required><br>
-            Prezzo <input type="number"  id="price" name="price" min="0.01" step="0.01" value="{{ store_item.prezzo }}" required>
-            Descrizione<input type="text" name="desc" value="{{ store_item.descrizione }}" required>
-            Sconto in %<input type="text" name="discount" id="discount" value="{{ store_item.sconto }}" required>
-            <input type="text" id="store_id" name="store_id" value="{{ store_item.id_store }}" required>
-        {% endfor %}
+            Quantità disponibile in <input type="number"  id="quantity" name="quantity" min="1" step="1" value="" required><br>
+            Prezzo <input type="number"  id="price" name="price" min="0.01" step="0.01" value="" required>
+            Descrizione<input type="text" name="desc" value="" required>
+            Sconto in %<input type="text" name="discount" id="discount" value="" required>
+            <input type="text" id="store_id" name="store_id" value="" required>
+
         <div class="btn">
             <input type="submit" id="aggiorna_btn" value="AGGIORNA">
             <input type="submit" id="back_btn" value="INDIETRO" onclick="setFormAction(event, '{% url 'homepage_provider' %}')">

@@ -98,7 +98,6 @@
 </head>
 <body>
 <form name="orders" method="post">
-    {% csrf_token %}
     <h1>ECCO I DETTAGLI DEL TUO ORDINE</h1>
     <div id="datas">
         <div class="grid_titoli">
@@ -110,33 +109,27 @@
             <div class="grid_item_titoli">Status</div>
         </div>
         <div class="grid_dati">
-            {% for order_details_item in orders_details_data %}
-                <div class="grid_item_dati">{{ order_details_item.quantita }}</div>
+                <div class="grid_item_dati"></div>
                 <div class="grid_item_dati">
-                    <span id="totale" {% if order_details_item.prezzo_totale_scontato != "0.00" %}style="color: red; text-decoration: line-through;"{% endif %}>
-                        €<span class="prezzo_totale">{{ order_details_item.prezzo_totale }}</span>
+                    <span id="totale">
+                        €<span class="prezzo_totale"></span>
                     </span>
-                    <span id="scontato" {% if order_details_item.prezzo_totale_scontato == "0.00" %} style="display:none;" {% endif %}>
-                        €<span class="prezzo_totale_scontato">{{ order_details_item.prezzo_totale_scontato }}</span>
+                    <span id="scontato">
+                        €<span class="prezzo_totale_scontato"></span>
                     </span>
                 </div>
-                <div class="grid_item_dati">{{ order_details_item.descrizione }}</div>
-                <div class="grid_item_dati">{{ order_details_item.sconto }}</div>
-                <div class="grid_item_dati">{{ order_details_item.fornitore_nome }}</div>
-                <div class="grid_item_dati">{{ order_details_item.status }}</div>
-                <div class="grid_item_dati" id="other_datas"><input type="text" id="status_order_txt" value="{{ order_details_item.status_order }}"><input type="text" name="order_id" value="{{ order_details_item.order_id }}"></div>
-            {% endfor %}
+                <div class="grid_item_dati"></div>
+                <div class="grid_item_dati"></div>
+                <div class="grid_item_dati"></div>
+                <div class="grid_item_dati"></div>
+                <div class="grid_item_dati" id="other_datas"><input type="text" id="status_order_txt" value=""><input type="text" name="order_id" value=""></div>
+
         </div>
         COSTO TOTALE ORDINE: <span id="total_cost"></span>
         <div id="btn">
-            <input type="submit" id="cancel_order" value="ANNULLA ORDINE" onclick="setFormAction(event, '{% url 'cancel_order' %}')" title="Verranno annullati gli ordini solo dei prodotti ancora in sospeso">
-            <input type="submit" id="back_btn" value="INDIETRO" onclick="setFormAction(event, '{% url 'orders' %}')">
+            <input type="submit" id="cancel_order" value="ANNULLA ORDINE"  title="Verranno annullati gli ordini solo dei prodotti ancora in sospeso">
+            <input type="submit" id="back_btn" value="INDIETRO">
         </div>
-        {% if message %}
-            <script>
-                alert("{{ message }}");
-            </script>
-        {% endif %}
     </div>
 </form>
     <script>

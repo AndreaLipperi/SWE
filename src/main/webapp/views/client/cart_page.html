@@ -96,7 +96,6 @@
 </head>
 <body>
     <form name="carrello" method="post">
-        {% csrf_token %}
         <h1>ECCO I PRODOTTI DEL TUO CARRELLO</h1>
         <div id="datas">
             <div class="grid_titoli">
@@ -109,29 +108,23 @@
                 <div class="grid_item_titoli"></div>
             </div>
             <div class="grid_dati">
-                {% for cart_item in cart_data %}
-                    <div class="grid_item_dati">{{ cart_item.fornitore_nome }}</div>
-                    <div class="grid_item_dati">€ {{ cart_item.prezzo }}</div>
-                    <div class="grid_item_dati">{{ cart_item.descrizione }}</div>
-                    <div class="grid_item_dati">{{ cart_item.quantita_disponibile }}</div>
-                    <div class="grid_item_dati">{{ cart_item.sconto }}</div>
+
+                    <div class="grid_item_dati"></div>
+                    <div class="grid_item_dati">€ </div>
+                    <div class="grid_item_dati"></div>
+                    <div class="grid_item_dati"></div>
+                    <div class="grid_item_dati"></div>
                     <div class="grid_item_dati">
-                        <input type="number"  id="quantity" name="quantity[]" min="1" max="{{ cart_item.quantita_disponibile }}" step="1" value="0">
+                        <input type="number"  id="quantity" name="quantity[]" min="1" max="" step="1" value="0">
                     </div>
                     <div class="grid_item_dati">
-                        <a href="{% url 'delete_one_prod_form_cart' cart_id=cart_item.cart_id %}">Elimina dal carrello</a>
+                        <a href="">Elimina dal carrello</a>
                     </div>
-                {% endfor %}
             </div>
             <div id="btn">
                 <input type="submit" id="do_order" value="INVIA ORDINE" onclick="setOrder(event, '{% url 'do_order' %}')" disabled>
                 <input type="submit" id="back_btn" value="INDIETRO" onclick="setFormAction(event, '{% url 'homepage_client' %}')">
             </div>
-            {% if message %}
-                <script>
-                    alert("{{ message }}");
-                </script>
-            {% endif %}
         </div>
     </form>
     <script>
