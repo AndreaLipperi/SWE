@@ -2,49 +2,22 @@ package com.example.models;
 
 import java.util.List;
 
-public class Provider {
-    private String type;
-    private String email;
-    private String psw;
-    private String username;
+public class Provider extends User {
     private List<Store> store;
 
     public Provider() {
-        this.type = "";
-        this.email = "";
-        this.psw = "";
-        this.username = "";
+        super();
     }
 
-    public Provider(String type, String email, String psw, String username) {
-        this.type = type;
-        this.email = email;
-        this.psw = psw;
-        this.username = username;
+    public Provider(String type, String email, String psw, String username, List<Store> store) {
+        super(type, email, psw, username);
+        this.store = store;
     }
 
-    public String getType() {
-        return type;
+    public List<Store> getStore() {
+        return store;
     }
-    public void setType(String type) {
-        this.type = type;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    public String getPsw() {
-        return psw;
-    }
-    public void setPsw(String psw) {
-        this.psw = psw;
-    }
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
+    public void setStore(List<Store> store) {
+        this.store = store;
     }
 }

@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="ingrossodb.sqlite3" uuid="c536ba06-ad25-4678-8569-caf19414e649">
+    <data-source source="LOCAL" name="ingrossodb.sqlite3" uuid="5d56ef70-b69b-4091-b41b-145e0364a3ee">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
+      <imported>true</imported>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/src/resources/database/ingrossodb.sqlite3</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/src/main/resources/database/ingrossodb.sqlite3</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
+      </jdbc-additional-properties>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="verceldb@ep-cold-night-a4jy371w-pooler.us-east-1.aws.neon.tech" uuid="bc125fce-dada-4fbf-ad8b-9670d730125c">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ep-cold-night-a4jy371w-pooler.us-east-1.aws.neon.tech/verceldb</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="com.intellij.clouds.kubernetes.db.host.port" />
+        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
+        <property name="com.intellij.clouds.kubernetes.db.container.port" />
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>

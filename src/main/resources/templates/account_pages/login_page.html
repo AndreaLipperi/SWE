@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>LOG IN</title>
+    <style>
+        body {
+            background-color: #ccc;
+        }
+        form {
+            font-size: 2em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        input {
+            margin: 1%;
+            font-size: 0.6em;
+        }
+        #btn {
+            display: inline-flex;
+        }
+        a {
+            font-size: 0.5em;
+            margin-top: 1%;
+            color: black;
+        }
+        a:hover {
+            color:red;
+        }
+        label {
+            display: inline-flex;
+        }
+    </style>
+</head>
+<body>
+    <form name="login" method="post">
+        <h1>INSERISCI I TUOI DATI</h1>
+        <p>Come vuoi accedere</p>
+        <label>
+            <input type="radio" name="user_type" value="F" required>
+            Fornitore
+        </label>
+        <label>
+            <input type="radio" name="user_type" value="C">
+            Cliente
+        </label>
+        <br>
+        USERNAME <input type="text" name="username" placeholder="username..." required>
+        PASSWORD <input type="password" name="psw" id="psw" placeholder="password..." required><input type="button" id="mostra_nascondi_psw" value="Mostra Password" onclick="showHidePsw('psw', 'mostra_nascondi_psw')">
+        <div id="btn">
+            <input type="submit" id="send_btn" value="ACCEDI">
+            <input type="submit" id="back_btn" value="INDIETRO">
+        </div>
+        <a href="forgot_password.html">Password dimenticata...</a>
+    </form>
+
+    <script>
+        document.getElementById("back_btn").addEventListener("click", function(event) {
+            event.preventDefault(); // Impedisce il comportamento predefinito
+            window.location.href = "/"; // Reindirizza alla homepage
+        });
+
+
+        function redirect(link) {
+            // Reindirizza alla pagina specificata
+            window.location.href = link;
+        }
+        function showHidePsw(id_psw, id_btn) {
+            var psw_txt = document.getElementById(id_psw);
+            var btn = document.getElementById(id_btn);
+
+            if (psw_txt.type==="password") {
+                btn.value = "Nascondi Password";
+                psw_txt.type="text";
+            } else {
+                btn.value = "Mostra Password";
+                psw_txt.type="password";
+            }
+        }
+    </script>
+</body>
+</html>
