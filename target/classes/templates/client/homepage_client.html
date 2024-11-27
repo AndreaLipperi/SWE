@@ -177,13 +177,13 @@
     </script>
 </head>
 <body>
-<form name="homepage" action="/" method="get">
+<form name="homepage" action="/" method="post">
     <div id="header">
         <span id="menu" onmouseenter="showSottomenu()" onclick="showSottomenu()"> &#x2630;</span>
         <button id="logout">ESCI</button>
     </div>
     <div id="sottomenu">
-        <a href="">Carrello ></a> <br>
+        <a href="/cart">Carrello ></a> <br>
         <a href="">I miei ordini ></a> <br>
         <a href="">Il mio Account ></a><br>
         <a href="">Cancella Account ></a>
@@ -205,6 +205,12 @@
                 <option value="">Seleziona</option>
             </select>
         </div>
+    </div>
+    <div th:if="${message}" style="color: green;">
+        <p th:text="${message}"></p>
+    </div>
+    <div th:if="${error}" style="color: red;">
+        <p th:text="${error}"></p>
     </div>
     <div id="datas">
 
@@ -233,7 +239,7 @@
                     <div class="grid_item_dati" th:text="${store.availableQuantity + ' ' + store.measureUnit.abbreviation}"></div>
                     <div class="grid_item_dati" th:text="${store.discount}"></div>
                     <div class="grid_item_dati">
-                        <a href="#">Inserisci nel carrello</a>
+                        <a th:href="@{/cart/add(productId=${store.id})}">Inserisci nel carrello</a>
                     </div>
                 </th:block>
             </div>
