@@ -15,4 +15,15 @@ public class PageController {
     public String registerPage() {
         return "account_pages/registration_page"; // Restituisce registration_page.html (Thymeleaf)
     }
+
+    @GetMapping("/forgot_password")
+    public String forgot_password() {
+        return "account_pages/forgot_password"; // Restituisce registration_page.html (Thymeleaf)
+    }
+
+    @GetMapping("/update_psw")
+    public String update_psw() {
+        return "account_pages/update_psw"; // Restituisce registration_page.html (Thymeleaf)
+    }
+
 }

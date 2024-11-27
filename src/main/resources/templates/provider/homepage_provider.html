@@ -113,12 +113,9 @@
     <!-- Includi jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function setFormAction(event, actionUrl) {
-            event.preventDefault(); // Impedisce il comportamento di submit di default
-            var form = event.target.form; // Ottiene il form relativo al pulsante cliccato
-            form.action = actionUrl; // Imposta dinamicamente l'attributo action
-            form.submit(); // Invia il form
-        }
+        document.getElementById("logout").addEventListener("click", function(event) {
+            window.location.href = "/"; // Reindirizza alla homepage
+        });
         function showSottomenu() {
             var sottomenu = document.getElementById("sottomenu");
             if (sottomenu.style.display==="none") {
@@ -127,15 +124,69 @@
                 sottomenu.style.display="none";
             }
         }
+        function loadSubcategories() {
+            var categoryId = document.getElementById("selezione").value;
+
+            // Pulisce la select delle sottocategorie
+            var subcategorySelect = document.getElementById("subcategories");
+
+            // Rimuove tutte le opzioni tranne quella predefinita
+            while (subcategorySelect.options.length > 1) {
+                subcategorySelect.remove(1); // Rimuove l'elemento con indice 1, ovvero tutte le opzioni tranne quella predefinita
+            }
+
+            if (categoryId) {
+                $.ajax({
+                    url: '/getSubcategories',
+                    type: 'GET',
+                    data: { categoryId: categoryId },
+                    success: function(response) {
+                        // Aggiungi le nuove sottocategorie
+                        response.forEach(function(subcategory) {
+                            var option = document.createElement("option");
+                            option.value = subcategory.id;
+                            option.textContent = subcategory.name;
+                            subcategorySelect.appendChild(option);
+                        });
+                    },
+                    error: function() {
+                        alert("Errore nel recupero delle sottocategorie.");
+                    }
+                });
+            }
+        }
+        function loadProductsBySubcategory() {
+            var subcategoryId = document.getElementById("subcategories").value;
+
+            // Verifica che sia stata selezionata una sottocategoria
+            if (!subcategoryId) {
+                // Se l'utente seleziona "Seleziona", reindirizza alla homepage
+                window.location.href = "/homepage"; // Reindirizza alla homepage
+            } else {
+                $.ajax({
+                    url: '/getProductsBySubcategoryForProv',
+                    type: 'GET',
+                    data: { subcategoryId: subcategoryId },  // Passa l'ID della sottocategoria
+                    success: function(response) {
+                        // Gestisci la risposta e aggiorna la pagina con i nuovi prodotti
+                        // Per esempio, aggiorna la sezione #datas con i nuovi prodotti
+                        document.getElementById("datas").innerHTML = response;
+                    },
+                    error: function() {
+                        alert("Errore nel recupero dei prodotti.");
+                    }
+                });
+            }
+        }
     </script>
 
 
 </head>
 <body>
-<form name="homepage" method="post">
+<form name="homepage" action="/"  method="get">
     <div id="header">
         <span id="menu" onmouseenter="showSottomenu()" onclick="showSottomenu()"> &#x2630;</span>
-        <input type="submit" id="logout" value="ESCI" onclick="setFormAction(event, '{% url 'index' %}')">
+        <button id="logout">ESCI</button>
     </div>
     <div id="sottomenu">
         <a href="">Aggiungi prodotti ></a> <br>
@@ -147,43 +198,54 @@
     <div id="options" >
         <h3>i prodotti sono divisi in categorie e sottocatagorie, scegli qui sotto quelle che vuoi cercare</h3>
         <div id="choices">
-            <label for="selezione">Scegli una categoria specifica:</label>
-            <select id="selezione" name="selezione">
+            <select id="selezione" name="selezione" onchange="loadSubcategories()">
                 <option value="">Seleziona</option>
-
-                    <option value="{{ option_data_cat.name }}">{{ option_data_cat.name }}</option>
-                {
+                <!-- Iterazione Thymeleaf per popolare la select -->
+                <th:block th:each="categoria : ${categorie}">
+                    <option th:value="${categoria.id}" th:text="${categoria.name}"></option>
+                </th:block>
             </select>
+            <!-- Seleziona la sottocategoria -->
             <label for="subcategories">Scegli una sottocategoria:</label>
-            <select id="subcategories" name="subcategories">
+            <select id="subcategories" name="subcategories" onchange="loadProductsBySubcategory()">
                 <option value="">Seleziona</option>
             </select>
-        </div>
     </div>
-    <h3>Oppure cercare direttamente per descrizione</h3>
-    una volta cercato, clicca nuovamente su cerca per ricaricare la pagina
-    <input type="search" id="search" name="search" placeholder="Ricerca..."><input type="submit" id="search_btn" value="Cerca &#x1F50D;" onclick="setFormAction(event, '{% url 'search_product_for_prov' %}')">
+
     <div id="datas">
-            <p id="cat_prod">Categoria prodotti: <b></b></p>
+
+        <!-- Iteriamo su tutte le categorie -->
+        <th:block th:each="entry : ${storesByCategory}">
+            <h4 th:text="${'Categoria: ' + entry.key.name}"></h4> <!-- Nome della categoria -->
+
+            <!-- La griglia per questa categoria -->
             <div class="grid_titoli">
                 <div class="grid_item_titoli">Sottocategoria</div>
-                <div class="grid_item_titoli">Prezzo Unitario (non scontato)</div>
+                <div class="grid_item_titoli">Prezzo Unitario</div>
                 <div class="grid_item_titoli">Descrizione</div>
                 <div class="grid_item_titoli">Quantità disponibile</div>
                 <div class="grid_item_titoli">Sconto</div>
                 <div class="grid_item_titoli"></div>
                 <div class="grid_item_titoli"></div>
             </div>
-            <div class="grid_dati">
-                    <div class="grid_item_dati"></div>
-                    <div class="grid_item_dati">€ </div>
-                    <div class="grid_item_dati"></div>
-                    <div class="grid_item_dati"></div>
-                    <div class="grid_item_dati"></div>
-                    <div class="grid_item_dati"><a href="">Cancella prodotto</a></div>
-                    <div class="grid_item_dati"><a href="">Modifica prodotto</a></div>
 
+            <div class="grid_dati">
+                <!-- Iteriamo sui prodotti di questa categoria -->
+                <th:block th:each="store : ${entry.value}">
+                    <div class="grid_item_dati" th:text="${store.subcategory.name}"></div>
+                    <div class="grid_item_dati">€ <span th:text="${store.priceProduct}"></span></div>
+                    <div class="grid_item_dati" th:text="${store.descProd}"></div>
+                    <div class="grid_item_dati" th:text="${store.availableQuantity + ' ' + store.measureUnit.abbreviation}"></div>
+                    <div class="grid_item_dati" th:text="${store.discount}"></div>
+                    <div class="grid_item_dati">
+                        <a href="#">cancella prodotto</a>
+                    </div>
+                    <div class="grid_item_dati">
+                        <a href="#">modifica prodotto</a>
+                    </div>
+                </th:block>
             </div>
+        </th:block>
     </div>
 
 </form>

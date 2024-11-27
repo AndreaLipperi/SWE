@@ -87,7 +87,7 @@
         <div id="btn">
             <input type="submit" id="crea_btn" value="AGGIORNA" disabled>
             <input type="reset" id="reset_btn" value="CANCELLA" onclick="cancel_div()">
-            <input type="submit" id="back_btn" value="INDIETRO" onclick="setFormAction(event, '{% url 'index' %}')">
+            <input type="submit" id="back_btn" value="INDIETRO">
         </div>
     </form>
     <script>
@@ -172,6 +172,11 @@
                 psw_txt.type="password";
             }
         }
+
+        document.getElementById("back_btn").addEventListener("click", function(event) {
+            event.preventDefault(); // Evita il comportamento predefinito
+            window.location.href = "/login"; // Reindirizza alla pagina specificata
+        });
     </script>
 </body>
 </html>

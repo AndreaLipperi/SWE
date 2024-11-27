@@ -25,9 +25,11 @@
             font-size: 0.5em;
             margin-top: 1%;
             color: black;
+            text-decoration: underline;
         }
         a:hover {
             color:red;
+            text-decoration: underline;
         }
         label {
             display: inline-flex;
@@ -36,6 +38,13 @@
 </head>
 <body>
     <form name="login" method="post">
+
+        <div th:if="${error}" style="color: red;">
+            <p th:text="${error}"></p>
+        </div>
+        <div th:if="${message}" style="color: green;">
+            <p th:text="${message}"></p>
+        </div>
         <h1>INSERISCI I TUOI DATI</h1>
         <p>Come vuoi accedere</p>
         <label>
@@ -53,7 +62,7 @@
             <input type="submit" id="send_btn" value="ACCEDI">
             <input type="submit" id="back_btn" value="INDIETRO">
         </div>
-        <a href="forgot_password.html">Password dimenticata...</a>
+        <a id="forgot_paswword">Password dimenticata...</a>
     </form>
 
     <script>
@@ -61,12 +70,12 @@
             event.preventDefault(); // Impedisce il comportamento predefinito
             window.location.href = "/"; // Reindirizza alla homepage
         });
+        document.getElementById("forgot_paswword").addEventListener("click", function(event) {
+            event.preventDefault(); // Impedisce il comportamento predefinito
+            window.location.href = "/forgot_password"; // Reindirizza alla homepage
+        });
 
 
-        function redirect(link) {
-            // Reindirizza alla pagina specificata
-            window.location.href = link;
-        }
         function showHidePsw(id_psw, id_btn) {
             var psw_txt = document.getElementById(id_psw);
             var btn = document.getElementById(id_btn);
