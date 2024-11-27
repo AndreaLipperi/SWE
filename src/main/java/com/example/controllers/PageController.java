@@ -26,4 +26,5 @@ public class PageController {
         return "account_pages/update_psw"; // Restituisce registration_page.html (Thymeleaf)
     }
 
+
 }

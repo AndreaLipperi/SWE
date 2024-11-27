@@ -110,7 +110,7 @@ public class HomePageController {
                         .append(" ").append(store.getMeasureUnit().getAbbreviation()).append("</div>");
                 htmlResponse.append("<div class='grid_item_dati'>").append(store.getDiscount()).append("</div>");
                 htmlResponse.append("<div class='grid_item_dati'>")
-                        .append("<a href='#'>Inserisci nel carrello</a>")
+                        .append("<a href='/cart/add?productId=" + store.getId() + "'>Inserisci nel carrello</a>")
                         .append("</div>");
             }
 

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 
 @Service
@@ -71,6 +72,18 @@ public class StoreService {
         }
 
         return storesByCategory;
+    }
+
+
+        // Metodo per ottenere un prodotto per ID
+    public Store getStoreById(Long productId) {
+        Optional<Store> store = storeRepository.findById(productId);
+
+        if (store.isPresent()) {
+            return store.get();
+        } else {
+            throw new RuntimeException("Prodotto non trovato con ID: " + productId); // O puoi restituire null o gestirlo come preferisci
+        }
     }
 
 }

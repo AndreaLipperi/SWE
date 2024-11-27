@@ -1,44 +1,45 @@
 package com.example.models;
 
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "cart")
 public class Cart {
-    private List<Product> products;
-    private int quantity;
-    private String username_client;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store product;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public Cart() {
-        this.quantity = 0;
-        this.username_client = "";
-        products = new ArrayList<>();
+    // Getter e Setter
+    public Long getId() {
+        return id;
     }
 
-    public Cart(int quantity, String username_client) {
-        this.quantity = quantity;
-        this.username_client = username_client;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-    public void setStatus(String username_client) {
-        this.username_client = username_client;
-    }
-    public int getQuantity(){
-        return this.quantity;
-    }
-    public String getUsername_client(){
-        return this.username_client;
+    public User getUser() {
+        return user;
     }
 
-    public void addProduct(Product product) {
-        products.add(product);
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public List<Product> getProducts() {
-        return products;
+
+    public Store getProduct() {
+        return product;
+    }
+
+    public void setProduct(Store product) {
+        this.product = product;
     }
 }

@@ -8,6 +8,7 @@ public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private int available_quantity;
 
     private double price_product;
@@ -45,6 +46,10 @@ public class Store {
         this.provider = provider;
         this.discount = discount;
         this.measureUnit = measureUnit;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public int getAvailableQuantity() {
