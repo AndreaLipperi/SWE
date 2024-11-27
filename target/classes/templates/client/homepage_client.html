@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>IL TUO INGROSSO A PORTATA DI CLICK</title>
+    <style>
+        body {
+            background-color: #ccc;
+        }
+        form {
+            font-size: 2em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #choices {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #datas {
+            font-size: 0.8em;
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Spazio tra le sezioni delle categorie */
+        }
+
+        .grid_titoli,.grid_dati {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); /* Stessa disposizione delle colonne per i titoli */
+            font-weight: bold; /* Stili per rendere il testo dei titoli in grassetto */
+            grid-gap: 10px; /* Spazio tra le celle della griglia */
+        }
+
+        .grid_item_titoli {
+            padding: 5px; /* Padding per separare i titoli */
+            border-bottom: 2px solid #000; /* Aggiunge una linea inferiore per separare i titoli dalla griglia dei dati */
+        }
+
+        .grid_item_dati {
+            background-color: antiquewhite;
+            padding: 5px; /* Padding per separare i dati */
+            border: 2px solid #ccc; /* Aggiunge una linea inferiore per separare le righe dei dati */
+        }
+        #header {
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 1);
+            width: 100%;
+            height: 7%;
+            position: fixed;
+            top:0;
+            z-index: 1000;
+        }
+
+        #sottomenu {
+            background-color: rgba(255, 255, 255, 1);
+            width: 30%;
+            height: 20%;
+            z-index: 1000;
+            position: fixed;
+            top: 6%; /* Posiziona il sottomenu subito sotto il header */
+            left: 0;
+            display: none;
+        }
+        #sottomenu a {
+            color: black;
+            text-decoration: none;
+        }
+        #menu {
+            font-size: 1em;
+            position: fixed;
+            top: 1%;
+            left: 1%;
+        }
+
+        #logout {
+            font-size: 1em;
+            position: absolute;
+            top:5px;
+            right: 5px;
+        }
+        #search, #search_btn {
+            font-size: 0.8em;
+        }
+        @media (max-width: 1060px){
+            form {
+                font-size: 1em;
+            }
+
+            #datas {
+                font-size: 0.6em;
+                display: flex;
+                flex-direction: column;
+                gap: 10px; /* Spazio tra le sezioni delle categorie */
+            }
+            #header {
+                height: 4%;
+            }
+            #sottomenu {
+                top: 4%;
+                height: 10%;
+                width: 35%;
+            }
+        }
+    </style>
+    <!-- Includi jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.getElementById("logout").addEventListener("click", function(event) {
+            window.location.href = "/"; // Reindirizza alla homepage
+        });
+        function showSottomenu() {
+            var sottomenu = document.getElementById("sottomenu");
+            if (sottomenu.style.display==="none") {
+                sottomenu.style.display="block";
+            } else {
+                sottomenu.style.display="none";
+            }
+        }
+        function loadSubcategories() {
+            var categoryId = document.getElementById("selezione").value;
+
+            // Pulisce la select delle sottocategorie
+            var subcategorySelect = document.getElementById("subcategories");
+
+            // Rimuove tutte le opzioni tranne quella predefinita
+            while (subcategorySelect.options.length > 1) {
+                subcategorySelect.remove(1); // Rimuove l'elemento con indice 1, ovvero tutte le opzioni tranne quella predefinita
+            }
+
+            if (categoryId) {
+                $.ajax({
+                    url: '/getSubcategories',
+                    type: 'GET',
+                    data: { categoryId: categoryId },
+                    success: function(response) {
+                        // Aggiungi le nuove sottocategorie
+                        response.forEach(function(subcategory) {
+                            var option = document.createElement("option");
+                            option.value = subcategory.id;
+                            option.textContent = subcategory.name;
+                            subcategorySelect.appendChild(option);
+                        });
+                    },
+                    error: function() {
+                        alert("Errore nel recupero delle sottocategorie.");
+                    }
+                });
+            }
+        }
+        function loadProductsBySubcategory() {
+            var subcategoryId = document.getElementById("subcategories").value;
+
+            // Verifica che sia stata selezionata una sottocategoria
+            if (!subcategoryId) {
+                // Se l'utente seleziona "Seleziona", reindirizza alla homepage
+                window.location.href = "/homepage"; // Reindirizza alla homepage
+            } else {
+                $.ajax({
+                    url: '/getProductsBySubcategory',
+                    type: 'GET',
+                    data: { subcategoryId: subcategoryId },  // Passa l'ID della sottocategoria
+                    success: function(response) {
+                        // Gestisci la risposta e aggiorna la pagina con i nuovi prodotti
+                        // Per esempio, aggiorna la sezione #datas con i nuovi prodotti
+                        document.getElementById("datas").innerHTML = response;
+                    },
+                    error: function() {
+                        alert("Errore nel recupero dei prodotti.");
+                    }
+                });
+            }
+        }
+
+    </script>
+</head>
+<body>
+<form name="homepage" action="/" method="get">
+    <div id="header">
+        <span id="menu" onmouseenter="showSottomenu()" onclick="showSottomenu()"> &#x2630;</span>
+        <button id="logout">ESCI</button>
+    </div>
+    <div id="sottomenu">
+        <a href="">Carrello ></a> <br>
+        <a href="">I miei ordini ></a> <br>
+        <a href="">Il mio Account ></a><br>
+        <a href="">Cancella Account ></a>
+    </div>
+    <h1>ECCO TUTTI I PRODOTTI CHE ABBIAMO</h1>
+    <div id="options">
+        <h3>i prodotti sono divisi in categorie e sottocatagorie, scegli qui sotto quelle che vuoi cercare</h3>
+        <div id="choices">
+            <select id="selezione" name="selezione" onchange="loadSubcategories()">
+                <option value="">Seleziona</option>
+                <!-- Iterazione Thymeleaf per popolare la select -->
+                <th:block th:each="categoria : ${categorie}">
+                    <option th:value="${categoria.id}" th:text="${categoria.name}"></option>
+                </th:block>
+            </select>
+            <!-- Seleziona la sottocategoria -->
+            <label for="subcategories">Scegli una sottocategoria:</label>
+            <select id="subcategories" name="subcategories" onchange="loadProductsBySubcategory()">
+                <option value="">Seleziona</option>
+            </select>
+        </div>
+    </div>
+    <div id="datas">
+
+        <!-- Iteriamo su tutte le categorie -->
+        <th:block th:each="entry : ${storesByCategory}">
+            <h4 th:text="${'Categoria: ' + entry.key.name}"></h4> <!-- Nome della categoria -->
+
+            <!-- La griglia per questa categoria -->
+            <div class="grid_titoli">
+                <div class="grid_item_titoli">Sottocategoria</div>
+                <div class="grid_item_titoli">Fornitore</div>
+                <div class="grid_item_titoli">Prezzo Unitario</div>
+                <div class="grid_item_titoli">Descrizione</div>
+                <div class="grid_item_titoli">Quantità disponibile</div>
+                <div class="grid_item_titoli">Sconto</div>
+                <div class="grid_item_titoli"></div>
+            </div>
+
+            <div class="grid_dati">
+                <!-- Iteriamo sui prodotti di questa categoria -->
+                <th:block th:each="store : ${entry.value}">
+                    <div class="grid_item_dati" th:text="${store.subcategory.name}"></div>
+                    <div class="grid_item_dati" th:text="${store.provider.username}"></div>
+                    <div class="grid_item_dati">€ <span th:text="${store.priceProduct}"></span></div>
+                    <div class="grid_item_dati" th:text="${store.descProd}"></div>
+                    <div class="grid_item_dati" th:text="${store.availableQuantity + ' ' + store.measureUnit.abbreviation}"></div>
+                    <div class="grid_item_dati" th:text="${store.discount}"></div>
+                    <div class="grid_item_dati">
+                        <a href="#">Inserisci nel carrello</a>
+                    </div>
+                </th:block>
+            </div>
+        </th:block>
+    </div>
+
+
+</form>
+</body>
+</html>

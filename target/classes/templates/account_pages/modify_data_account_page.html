@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AGGIORNA I DATI DEL TUO ACCOUNT</title>
+    <style>
+        body {
+            background-color: #ccc;
+        }
+        form {
+            font-size: 2em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        input {
+            margin: 1%;
+            font-size: 0.6em;
+        }
+        h1 {
+            font-size: 1.5em;
+        }
+        input[type="password"]{
+            font-size: 0.6em; /* Aggiungi questa regola per impostare la larghezza degli input */
+        }
+
+        #controllo_conf_psw {
+            font-size: 0.5em;
+        }
+
+        .btn {
+            display: inline-flex;
+        }
+        .type_user {
+            display:none;
+        }
+        @media (max-width: 1060px){
+            form {
+                font-size: 2em;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: normal;
+            }
+
+            input[type="password"] {
+                margin-left: 3%;
+                margin-top: 1%;
+                font-size: 0.6em;
+                display: block; /* Imposta tutti gli input di tipo testo e password su display block */
+                width: 100%; /* Aggiungi questa regola per impostare la larghezza degli input */
+            }
+        }
+    </style>
+</head>
+<body>
+    <form name="conf_psw" id="conf_psw_form">
+
+        <h1>COME PRIMA COSA CONFERMA LA PASSWORD<br> PER POI POTER MODIFICARE I DATI DEL TUO ACCOUNT</h1>
+
+        <p><span class="txt">PASSWORD</span><input type="password" name="psw" id="psw" placeholder="password..." oninput="compare_psw()" required><input type="button" id="mostra_nascondi_psw" value="Mostra Password" onclick="showHidePsw('psw', 'mostra_nascondi_psw')"></p>
+        <p><span class="txt">CONFERMA<br> PASSWORD </span><input type="password" id="conf_psw" placeholder="conferma password..." oninput="compare_psw()" required><input type="button" id="mostra_nascondi_conf_psw" value="Mostra Password" onclick="showHidePsw('conf_psw', 'mostra_nascondi_conf_psw')"><div id="controllo_conf_psw"></div></p>
+        <input type="text" class="type_user" id="type_user" value="">
+        <div class="btn">
+            <input type="submit" id="invia_btn" value="INVIA" disabled>
+            <input type="submit" id="back_btn" value="INDIETRO">
+        </div>
+    </form>
+
+    <form name="update_datas" id="update_datas_form">
+
+        <h1>MODIFICA I TUOI DATI</h1>
+            EMAIL <input type="text" name="email" value=""><br>
+            USERNAME <input type="text" name="username" value="">
+
+        <input type="text" class="type_user" id="type_user" value="">
+        <div class="btn">
+            <input type="submit" id="aggiorna_btn" value="AGGIORNA">
+            <input type="submit" id="back_btn" value="INDIETRO">
+        </div>
+    </form>
+    <script>
+        var submitButton = document.getElementById("invia_btn");
+
+        function compare_psw() {
+            var psw = document.getElementById("psw").value;
+            var conf_psw = document.getElementById("conf_psw").value;
+            var div = document.getElementById("controllo_conf_psw");
+            if (psw!==conf_psw) {
+                control_on_psw_conf=false;
+                div.style.color = "red";
+                div.innerHTML = "Le password con coincidono";
+                submitButton.setAttribute("disabled", "disabled");
+            } else {
+                control_on_psw_conf=true;
+                div.style.color = "green";
+                div.innerHTML = "Le password coincidono";
+                submitButton.removeAttribute("disabled");
+            }
+        }
+        function showHidePsw(id_psw, id_btn) {
+            var psw_txt = document.getElementById(id_psw);
+            var btn = document.getElementById(id_btn);
+
+            if (psw_txt.type==="password") {
+                btn.value = "Nascondi Password";
+                psw_txt.type="text";
+            } else {
+                btn.value = "Mostra Password";
+                psw_txt.type="password";
+            }
+        }
+    </script>
+</body>
+</html>
