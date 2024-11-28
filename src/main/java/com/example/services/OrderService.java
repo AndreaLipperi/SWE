@@ -7,6 +7,7 @@ import com.example.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -29,6 +30,7 @@ public class OrderService {
             // Se lo stato non è specificato, filtra solo per utente
             orders = orderRepository.findByUser(user);
         }
+        orders.sort(Comparator.comparing(Order::getDate).reversed());
 
         return orders;
     }

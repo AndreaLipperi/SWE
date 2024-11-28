@@ -1,6 +1,8 @@
 package com.example.controllers;
 
 import com.example.models.*;
+import com.example.repositories.OrderDetailsRepository;
+import com.example.repositories.OrderRepository;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import com.example.repositories.CartRepository;
@@ -22,6 +24,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class OrdersController {
@@ -38,6 +41,10 @@ public class OrdersController {
     private OrderDetailsService orderDetailsService;
 
     private static final Logger logger = LoggerFactory.getLogger(OrdersController.class);
+    @Autowired
+    private OrderDetailsRepository orderDetailsRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
     @GetMapping("/do_order")
     public String doOrder(@RequestParam Map<String, String> quantities, HttpSession session, Model model) {
@@ -130,7 +137,7 @@ public class OrdersController {
             htmlResponse.append("<div class='grid_item_dati'>").append(order.getStatus()).append("</div>");
             htmlResponse.append("<div class='grid_item_dati'>").append(order.getDate()).append("</div>");
             htmlResponse.append("<div class='grid_item_dati'>")
-                    .append("<a href='").append(order.getId()).append("'>Vedi dettagli ordine</a>")
+                    .append("<a href='/order_details?orderId=" + order.getId() + "'>Visualizza dettagli ordine</a>")
                     .append("</div>");
         }
 
@@ -139,6 +146,29 @@ public class OrdersController {
         htmlResponse.append("</div>"); // Fine struttura dati
 
         return htmlResponse.toString();
+    }
+
+    @GetMapping("/cancel_order")
+    public String cancelOrder(HttpSession session, Model model,
+                              RedirectAttributes redirectAttributes) {
+        Order order = (Order) session.getAttribute("order");
+        List<Order_Details> order_details = orderDetailsRepository.findByOrderId(order.getId());
+
+        for (Order_Details order_detail : order_details) {
+            if (order_detail.getStatus().equals("S")) {
+                orderDetailsRepository.delete(order_detail);
+            }
+        }
+        List<Order_Details> order_details_canceled = orderDetailsRepository.findByOrderId(order.getId());
+        if (order_details_canceled.isEmpty()) {
+            orderRepository.delete(order);
+        } else {
+            order.setStatus("C");
+            orderRepository.save(order);
+        }
+        session.removeAttribute("order");
+        redirectAttributes.addFlashAttribute("message", "Prodotto rimosso con successo!");
+        return "redirect:/homepage";
     }
 
 }

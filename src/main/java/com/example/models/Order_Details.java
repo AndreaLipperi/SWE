@@ -64,4 +64,11 @@ public class Order_Details {
     public void setOrder(Order order) {
         this.order = order;
     }
+
+    public double getTotalPrice() {
+        return store.getPriceProduct() * quantity;
+    }
+    public double getPriceDiscounted() {
+        return (store.getPriceProduct() - (store.getPriceProduct() * store.getDiscount() / 100)) * quantity;
+    }
 }

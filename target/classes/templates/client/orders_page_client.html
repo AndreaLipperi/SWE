@@ -94,7 +94,7 @@
     </script>
 </head>
 <body>
-    <form name="orders" method="post">
+    <form name="orders" method="get">
         <h1>ECCO LO STORICO DEI TUOI ORDINI</h1>
         <label for="selezione">Filtra ordini per status:</label>
         <select id="selezione" name="selezione"  onchange="loadOrdersByStatus()">
@@ -112,7 +112,7 @@
                 <div class="grid_item_dati" th:text="${order.status}"></div>
                 <div class="grid_item_dati" th:text="${order.date}"></div>
                 <div class="grid_item_dati">
-                    <a>Vedi dettagli ordine</a>
+                    <a th:href="@{/order_details(orderId=${order.id})}">Vedi dettagli ordine</a>
                 </div>
             </div>
         </div>
@@ -120,5 +120,11 @@
                 <input type="submit" id="back_btn" value="INDIETRO">
             </div>
     </form>
+    <script>
+        document.getElementById("back_btn").addEventListener("click", function(event) {
+            event.preventDefault(); // Impedisce il comportamento predefinito
+            window.location.href = "/homepage"; // Reindirizza alla homepage
+        });
+    </script>
 </body>
 </html>
