@@ -4,6 +4,7 @@ import com.example.models.Cart;
 import com.example.models.User;
 import com.example.models.Store;
 import com.example.repositories.CartRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +39,10 @@ public class CartService {
             return true; // Restituisce true se è stato rimosso correttamente
         }
         return false; // Se non è stato trovato, restituisce false
+    }
+    @Transactional
+    public void removeAllFromCart(User user) {
+        // Elimina tutti gli articoli dal carrello dell'utente
+        cartRepository.deleteByUser(user);
     }
 }

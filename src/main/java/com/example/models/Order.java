@@ -1,22 +1,44 @@
 package com.example.models;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
+import java.util.Date;
 
+@Entity
+@Table(name = "orders")
 public class Order {
-    private LocalDate date;
-    private String status;
-    private String username_client;
-    private Order_Details orderDetails;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Order(String username_client) {
-        this.date = LocalDate.now();
-        this.status = "Pending";
-        this.username_client = username_client;
-        this.orderDetails = new Order_Details();
+    private Date date_order;
+    private String status;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public Order() {
+        this.status = "";
     }
 
-    public LocalDate getDate() {
-        return date;
+    public Order(Long id, Date date_order, String status, User user) {
+        this.id = id;
+        this.date_order = date_order;
+        this.status = status;
+        this.user = user;
+    }
+    public Long getId() {
+        return id;
+    }
+
+    public Date getDate() {
+        return date_order;
+    }
+
+    public void setDate(Date date_order) {
+        this.date_order = date_order;
     }
 
     public String getStatus() {
@@ -27,12 +49,11 @@ public class Order {
         this.status = status;
     }
 
-    public String getUsername() {
-        return username_client;
+    public User getUser() {
+        return user;
     }
-
-    public Order_Details getOrderDetails() {
-        return orderDetails;
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

@@ -1,24 +1,43 @@
 package com.example.models;
 
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "orders_details")
 public class Order_Details {
-    private List<Product> products;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "store_id", nullable = false)
+    private Store store;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
+
     private int quantity;
     private String status;
-
 
 
     public Order_Details() {
         this.quantity = 0;
         this.status = "";
-        products = new ArrayList<>();
     }
 
-    public Order_Details(int quantity, String status) {
+    public Order_Details(Store store, Order order, int quantity, String status) {
+        this.store = store;
+        this.order = order;
         this.quantity = quantity;
         this.status = status;
+    }
+    public Long getId() {
+        return id;
     }
 
     public void setQuantity(int quantity) {
@@ -33,12 +52,16 @@ public class Order_Details {
     public String getStatus(){
         return this.status;
     }
-
-    public void addProduct(Product product) {
-        products.add(product);
+    public Store getStore() {
+        return store;
     }
-
-    public List<Product> getProducts() {
-        return products;
+    public void setStore(Store store) {
+        this.store = store;
+    }
+    public Order getOrder() {
+        return order;
+    }
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }
