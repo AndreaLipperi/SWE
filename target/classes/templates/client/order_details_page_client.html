@@ -22,13 +22,13 @@
         }
         .grid_titoli {
             display: grid;
-            grid-template-columns: repeat(6, 1fr); /* Stessa disposizione delle colonne per i titoli */
+            grid-template-columns: repeat(7, 1fr); /* Stessa disposizione delle colonne per i titoli */
             font-weight: bold; /* Stili per rendere il testo dei titoli in grassetto */
             grid-gap: 10px; /* Spazio tra le celle della griglia */
         }
         .grid_dati {
             display: grid;
-            grid-template-columns: repeat(6, 1fr); /* Stessa disposizione delle colonne per i titoli */
+            grid-template-columns: repeat(7, 1fr); /* Stessa disposizione delle colonne per i titoli */
             grid-gap: 10px; /* Spazio tra le celle della griglia */
         }
 
@@ -52,9 +52,6 @@
         .grid_item_dati {
             padding: 5px; /* Padding per separare i dati */
             border-bottom: 1px solid #ccc; /* Aggiunge una linea inferiore per separare le righe dei dati */
-        }
-        #other_datas {
-            display: none;
         }
         #scontato {
             color: green;
@@ -97,8 +94,16 @@
     </script>
 </head>
 <body>
-<form name="orders" method="post">
+<form name="orders" action="/cancel_order" method="get">
     <h1>ECCO I DETTAGLI DEL TUO ORDINE</h1>
+    <div id="legenda" style="text-align: left">
+        <h5>Legenda status:</h5>
+        <ul>
+            <li>A-->Accettato</li>
+            <li>R-->Rifiutato</li>
+            <li>S-->In sospeso</li>
+        </ul>
+    </div>
     <div id="datas">
         <div class="grid_titoli">
             <div class="grid_item_titoli">Quantità Ordinata</div>
@@ -107,23 +112,24 @@
             <div class="grid_item_titoli">Sconto</div>
             <div class="grid_item_titoli">Fornitore</div>
             <div class="grid_item_titoli">Status</div>
+            <div class="grid_item_titoli"></div>
         </div>
-        <div class="grid_dati">
-                <div class="grid_item_dati"></div>
-                <div class="grid_item_dati">
-                    <span id="totale">
-                        €<span class="prezzo_totale"></span>
+        <div class="grid_dati" th:each="order : ${orderDetails}">
+            <div class="grid_item_dati" th:text="${order.quantity}"></div>
+            <div class="grid_item_dati">
+                <span id="totale">
+                    €<span class="prezzo_totale" th:text="${order.getTotalPrice()}"></span>
+                </span>
+                <span id="scontato" th:if="${order.store.discount > 0}">
+                    €<span class="prezzo_totale_scontato" th:text="${order.getPriceDiscounted()}">
                     </span>
-                    <span id="scontato">
-                        €<span class="prezzo_totale_scontato"></span>
-                    </span>
-                </div>
-                <div class="grid_item_dati"></div>
-                <div class="grid_item_dati"></div>
-                <div class="grid_item_dati"></div>
-                <div class="grid_item_dati"></div>
-                <div class="grid_item_dati" id="other_datas"><input type="text" id="status_order_txt" value=""><input type="text" name="order_id" value=""></div>
-
+                </span>
+            </div>
+            <div class="grid_item_dati" th:text="${order.store.descProd}"></div>
+            <div class="grid_item_dati" th:text="${order.store.discount + '%'}"></div>
+            <div class="grid_item_dati" th:text="${order.store.provider.username}"></div>
+            <div class="grid_item_dati" id="status_order_txt" th:text="${order.status}"></div>
+            <div class="grid_item_dati"><span th:if="${order.status=='S'}"><a th:href="@{/cancel_order_one_product(orderDetailId=${order.id})}">Annulla ordine prodotto</a></span></div>
         </div>
         COSTO TOTALE ORDINE: <span id="total_cost"></span>
         <div id="btn">
@@ -137,16 +143,19 @@
         function showCancelBtn() {
             var status = document.getElementById("status_order_txt");
             var cancel_btn = document.getElementById("cancel_order");
-            if (status.value==="C") {
+            if (status.textContent==="A" || status.textContent==="R") {
                 cancel_btn.style.display="none";
-            } else if (status.value==="S"){
+            } else if (status.textContent==="S"){
                 cancel_btn.style.display="block";
             }
         }
         document.addEventListener('DOMContentLoaded', function() {
-
             // Esegui il controllo iniziale
             showCancelBtn();
+        });
+        document.getElementById("back_btn").addEventListener("click", function(event) {
+            event.preventDefault(); // Impedisce il comportamento predefinito
+            window.location.href = "/orders"; // Reindirizza alla homepage
         });
     </script>
 </body>

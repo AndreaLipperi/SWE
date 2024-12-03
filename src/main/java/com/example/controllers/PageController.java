@@ -1,5 +1,6 @@
 package com.example.controllers;
 
+import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -25,6 +26,16 @@ public class PageController {
     public String update_psw() {
         return "account_pages/update_psw"; // Restituisce registration_page.html (Thymeleaf)
     }
-
+    @GetMapping("/modify_account")
+    public String modifyAccount(Model model) {
+        if (!model.containsAttribute("formVisible")) {
+            model.addAttribute("formVisible", false); // Form nascosto per default
+        }
+        return "account_pages/modify_data_account_page";
+    }
+    @GetMapping("/delete_account")
+    public String delete_account(Model model) {
+        return "account_pages/delete_account";
+    }
 
 }

@@ -26,7 +26,9 @@ public class User {
         this.password = psw;
         this.username = username;
     }
-
+    public Long getId() {
+        return id;
+    }
     public String getType() {
         return type;
     }
