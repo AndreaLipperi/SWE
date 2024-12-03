@@ -56,17 +56,16 @@
     </style>
 </head>
 <body>
-    <form name="delete_account" action ="" method="post">
+    <form name="delete_account" action ="/delete" method="get">
 
         <h1> PER CONFERMARE LA CANCELLAZIONE DEL TUO ACCOUNT <br> INSERISCI LA PASSOWRD</h1>
         <h3><b>N.B.</b> non ti sarà possibile cancellare l'account se hai ancora ordini in sospeso <br> annulla gli ordini prima di cancellarlo</h3>
 
-        <p><span class="txt">PASSWORD</span><input type="password" name="psw" id="psw" placeholder="password..." oninput="compare_psw()" required><input type="button" id="mostra_nascondi_psw" value="Mostra Password" onclick="showHidePsw('psw', 'mostra_nascondi_psw')"></p>
+        <p><span class="txt">PASSWORD</span><input type="password" name="password" id="psw" placeholder="password..." oninput="compare_psw()" required><input type="button" id="mostra_nascondi_psw" value="Mostra Password" onclick="showHidePsw('psw', 'mostra_nascondi_psw')"></p>
         <p><span class="txt">CONFERMA<br> PASSWORD </span><input type="password" id="conf_psw" placeholder="conferma password..." oninput="compare_psw()" required><input type="button" id="mostra_nascondi_conf_psw" value="Mostra Password" onclick="showHidePsw('conf_psw', 'mostra_nascondi_conf_psw')"><div id="controllo_conf_psw"></div></p>
-        <input type="text" id="type" value="{{ type }}">
         <div class="btn">
             <input type="submit" id="delete_btn" value="INVIA" disabled>
-            <input type="submit" id="back_btn" value="INDIETRO" onclick="setFormAction(event)">
+            <input type="submit" id="back_btn" value="INDIETRO">
         </div>
     </form>
     <script>
@@ -100,6 +99,10 @@
                 psw_txt.type="password";
             }
         }
+        document.getElementById("back_btn").addEventListener("click", function(event) {
+            event.preventDefault(); // Impedisce il comportamento predefinito
+            window.location.href = "/homepage"; // Reindirizza alla homepage
+        });
     </script>
 </body>
 </html>

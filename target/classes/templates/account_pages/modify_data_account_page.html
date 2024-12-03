@@ -55,7 +55,7 @@
     </style>
 </head>
 <body>
-    <form name="conf_psw" id="conf_psw_form">
+    <form name="conf_psw" th:if="${formVisible == null or !formVisible}" action="/control_psw" id="conf_psw_form">
 
         <h1>COME PRIMA COSA CONFERMA LA PASSWORD<br> PER POI POTER MODIFICARE I DATI DEL TUO ACCOUNT</h1>
 
@@ -68,18 +68,21 @@
         </div>
     </form>
 
-    <form name="update_datas" id="update_datas_form">
+    <div th:if="${error}" style="color: red;">
+        <p th:text="${error}"></p>
+    </div>
+
+    <form name="update_datas" action="/update_datas" th:if="${formVisible != null and formVisible}" id="update_datas_form">
 
         <h1>MODIFICA I TUOI DATI</h1>
-            EMAIL <input type="text" name="email" value=""><br>
-            USERNAME <input type="text" name="username" value="">
-
-        <input type="text" class="type_user" id="type_user" value="">
+        EMAIL <input type="text" name="email" th:value="${email}"><br>
+        USERNAME <input type="text" name="username" th:value="${username}">
         <div class="btn">
             <input type="submit" id="aggiorna_btn" value="AGGIORNA">
             <input type="submit" id="back_btn" value="INDIETRO">
         </div>
     </form>
+
     <script>
         var submitButton = document.getElementById("invia_btn");
 
@@ -111,6 +114,10 @@
                 psw_txt.type="password";
             }
         }
+        document.getElementById("back_btn").addEventListener("click", function(event) {
+            event.preventDefault(); // Impedisce il comportamento predefinito
+            window.location.href = "/homepage"; // Reindirizza alla homepage
+        });
     </script>
 </body>
 </html>
