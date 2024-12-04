@@ -112,6 +112,7 @@
     </style>
     <!-- Includi jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
         document.getElementById("logout").addEventListener("click", function(event) {
             window.location.href = "/"; // Reindirizza alla homepage
@@ -189,7 +190,7 @@
         <button id="logout">ESCI</button>
     </div>
     <div id="sottomenu">
-        <a href="">Aggiungi prodotti ></a> <br>
+        <a href="/add_product">Aggiungi prodotti ></a> <br>
         <a href="">Ordini ricevuti ></a> <br>
         <a href="/modify_account">Il mio Account ></a><br>
         <a href="/delete_account">Cancella Account ></a>
@@ -212,6 +213,12 @@
             </select>
     </div>
 
+        <div th:if="${message}" style="color: green;">
+            <p th:text="${message}"></p>
+        </div>
+        <div th:if="${error}" style="color: red;">
+            <p th:text="${error}"></p>
+        </div>
     <div id="datas">
 
         <!-- Iteriamo su tutte le categorie -->
@@ -236,12 +243,12 @@
                     <div class="grid_item_dati">€ <span th:text="${store.priceProduct}"></span></div>
                     <div class="grid_item_dati" th:text="${store.descProd}"></div>
                     <div class="grid_item_dati" th:text="${store.availableQuantity + ' ' + store.measureUnit.abbreviation}"></div>
-                    <div class="grid_item_dati" th:text="${store.discount}"></div>
+                    <div class="grid_item_dati" th:text="${store.discount + '%'}"></div>
                     <div class="grid_item_dati">
-                        <a href="#">cancella prodotto</a>
+                        <a th:href="@{/delete_product(productId=${store.id})}">Cancella prodotto</a>
                     </div>
                     <div class="grid_item_dati">
-                        <a href="#">modifica prodotto</a>
+                        <a th:href="@{/update_product(productId=${store.id})}">Modifica prodotto</a>
                     </div>
                 </th:block>
             </div>

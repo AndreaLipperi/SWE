@@ -23,7 +23,7 @@ public class Store {
     @JoinColumn(name = "provider_id", nullable = false)
     private User provider;
 
-    private double discount;
+    private int discount;
 
     @ManyToOne
     @JoinColumn(name = "measure_units_id", nullable = false)
@@ -33,11 +33,11 @@ public class Store {
         this.available_quantity = 0;
         this.price_product = 0.0;
         this.desc_prod = "";
-        this.discount = 0.0;
+        this.discount = 0;
     }
 
     public Store(int available_quantity, double price_product, String desc_prod,
-                 Subcategory subcategory, User provider, double discount,
+                 Subcategory subcategory, User provider, int discount,
                  Measure_Unit measureUnit) {
         this.available_quantity = available_quantity;
         this.price_product = price_product;
@@ -92,11 +92,11 @@ public class Store {
         this.provider = provider;
     }
 
-    public double getDiscount() {
+    public int getDiscount() {
         return discount;
     }
 
-    public void setDiscount(double discount) {
+    public void setDiscount(int discount) {
         this.discount = discount;
     }
 

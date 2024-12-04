@@ -4,6 +4,7 @@ import com.example.models.Cart;
 import com.example.models.Category;
 import com.example.models.Store;
 import com.example.models.User;
+import com.example.repositories.StoreRepository;
 import com.example.services.CartService;
 import com.example.services.StoreService;
 import com.example.services.UserService;
@@ -30,6 +31,8 @@ public class CartController {
 
     @Autowired
     private StoreService storeService; // Aggiungi il tuo servizio per recuperare il prodotto
+    @Autowired
+    private StoreRepository storeRepository;
 
     // Metodo per aggiungere un prodotto al carrello
     @GetMapping("/cart/add")
@@ -38,7 +41,7 @@ public class CartController {
         // Recupera l'utente dalla sessione
         User user = (User) session.getAttribute("user");// Assume che l'ID utente sia memorizzato come "userId" nella sessione
 
-        Store store = storeService.getStoreById(productId);
+        Store store = storeRepository.findStoreById(productId);
         Cart existingCart = cartService.findCartByUserAndProduct(user, store);
         if (existingCart != null) {
             redirectAttributes.addFlashAttribute("error", "Prodotto già nel carrello!");

@@ -65,15 +65,8 @@
             }
         }
     </style>
-    <!-- Includi jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function setFormAction(event, actionUrl) {
-            event.preventDefault(); // Impedisce il comportamento di submit di default
-            var form = event.target.form; // Ottiene il form relativo al pulsante cliccato
-            form.action = actionUrl; // Imposta dinamicamente l'attributo action
-            form.submit(); // Invia il form
-        }
+
         function updateTotalSum() {
             let total = 0;
             const prices_disconted = document.querySelectorAll('.prezzo_totale_scontato');

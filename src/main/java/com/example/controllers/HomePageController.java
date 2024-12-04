@@ -58,13 +58,6 @@ public class HomePageController {
     }
 
     // Metodo per ottenere le sottocategorie in base all'ID della categoria selezionata
-    @GetMapping("/getSubcategories")
-    @ResponseBody
-    public List<Subcategory> getSubcategories(@RequestParam("categoryId") Long categoryId) {
-        // Recupera le sottocategorie in base alla categoria
-        List<Subcategory> subcategories = subcategoryService.findByCategoryId(categoryId);
-        return subcategories; // Restituisce la lista di sottocategorie in formato JSON
-    }
 
     @GetMapping("/getProductsBySubcategory")
     @ResponseBody

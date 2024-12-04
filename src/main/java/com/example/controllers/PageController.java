@@ -34,7 +34,7 @@ public class PageController {
         return "account_pages/modify_data_account_page";
     }
     @GetMapping("/delete_account")
-    public String delete_account(Model model) {
+    public String delete_account() {
         return "account_pages/delete_account";
     }
 

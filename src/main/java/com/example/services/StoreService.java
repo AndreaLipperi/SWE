@@ -73,16 +73,30 @@ public class StoreService {
 
         return storesByCategory;
     }
+    public boolean updateStore(Store store) {
+        try {
+            // Recupera l'utente esistente dal database tramite l'ID
+            Optional<Store> existingStore = storeRepository.findById(store.getId());
 
+            if (existingStore.isPresent()) {
+                Store storeToUpdate = existingStore.get();
 
-        // Metodo per ottenere un prodotto per ID
-    public Store getStoreById(Long productId) {
-        Optional<Store> store = storeRepository.findById(productId);
+                // Aggiorna i campi con i nuovi valori
+                storeToUpdate.setPriceProduct(store.getPriceProduct());
+                storeToUpdate.setDiscount(store.getDiscount());
+                storeToUpdate.setAvailableQuantity(store.getAvailableQuantity());
+                storeToUpdate.setDescProd(store.getDescProd());
 
-        if (store.isPresent()) {
-            return store.get();
-        } else {
-            throw new RuntimeException("Prodotto non trovato con ID: " + productId); // O puoi restituire null o gestirlo come preferisci
+                // Salva l'utente aggiornato
+                storeRepository.save(storeToUpdate);
+                return true;
+            } else {
+                System.out.println("Store non trovato");
+                return false; // Nessun utente trovato con l'ID fornito
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Log dell'errore per il debug
+            return false;
         }
     }
 

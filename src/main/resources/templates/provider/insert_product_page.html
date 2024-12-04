@@ -68,33 +68,73 @@
             }
         }
     </style>
+    <!-- Includi jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
+
+    <script>
+        function loadSubcategories() {
+            var categoryId = document.getElementById("selezione").value;
+
+            // Pulisce la select delle sottocategorie
+            var subcategorySelect = document.getElementById("subcategories");
+
+            // Rimuove tutte le opzioni tranne quella predefinita
+            while (subcategorySelect.options.length > 1) {
+                subcategorySelect.remove(1); // Rimuove l'elemento con indice 1, ovvero tutte le opzioni tranne quella predefinita
+            }
+
+            if (categoryId) {
+                $.ajax({
+                    url: '/getSubcategories',
+                    type: 'GET',
+                    data: { categoryId: categoryId },
+                    success: function(response) {
+                        // Aggiungi le nuove sottocategorie
+                        response.forEach(function(subcategory) {
+                            var option = document.createElement("option");
+                            option.value = subcategory.id;
+                            option.textContent = subcategory.name;
+                            subcategorySelect.appendChild(option);
+                        });
+                    },
+                    error: function() {
+                        alert("Errore nel recupero delle sottocategorie.");
+                    }
+                });
+            }
+        }
+    </script>
+    </head>
 <body>
-<form name="registration_form"  method="POST">
+<form name="registration_form" action="/add" method="get">
 
     <h1>INSERISCI I DATI</h1>
     <div id="datas">
         <div id="choices">
-            <label for="selezione">Scegli una categoria specifica:</label>
-            <select id="selezione" name="selezione">
+            <label for="selezione">Scegli una categoria:</label>
+            <select id="selezione" name="selezione" onchange="loadSubcategories()">
                 <option value="">Seleziona</option>
-                    <option value="">{{ option_data_cat.name }}</option>
+                <th:block th:each="categoria : ${categorie}">
+                    <option th:value="${categoria.id}" th:text="${categoria.name}"></option>
+                </th:block>
             </select>
+            <!-- Seleziona la sottocategoria -->
             <label for="subcategories">Scegli una sottocategoria:</label>
-            <select id="subcategories" name="subcategories" required>
+            <select id="subcategories" name="subcategories">
                 <option value="">Seleziona</option>
             </select>
         </div>
         Quantità disponibile <input type="number"  id="quantity" name="quantity" min="1" step="1" value="0" required><br>
         <label for="unita_misura">Scegli una unità di misura:</label>
-        <select id="unita_misura" name="unita_misura" required>
+        <select id="unita_misura" name="unita_misura">
             <option value="">Seleziona</option>
-                <option value=""></option>
+            <th:block th:each="um : ${unita_misura}">
+                <option th:value="${um.id}" th:text="${um.abbreviation}"></option>
+            </th:block>
         </select><br><br><br>
         Prezzo in € <input type="number"  id="price" name="price" min="0.01" step="0.01" value="0.00" required><br>
-        Descrizione<input type="text" name="desc" value="" required><br>
-        Sconto in %<input type="text" name="discount" id="discount" value=""><br>
+        Descrizione<input type="text" name="desc"required><br>
+        Sconto in %<input type="number" name="discount" id="discount" min="0" step="1"><br>
     </div>
     <div id="btn">
         <input type="submit" id="crea_btn" value="INSERISCI">
@@ -103,12 +143,10 @@
     </div>
 </form>
 <script>
-    function setFormAction(event, actionUrl) {
-        event.preventDefault(); // Impedisce il comportamento di submit di default
-        var form = event.target.form; // Ottiene il form relativo al pulsante cliccato
-        form.action = actionUrl; // Imposta dinamicamente l'attributo action
-        form.submit(); // Invia il form
-    }
+    document.getElementById("back_btn").addEventListener("click", function(event) {
+        event.preventDefault(); // Impedisce il comportamento predefinito
+        window.location.href = "/homepage"; // Reindirizza alla homepage
+    });
 </script>
 </body>
 </html>
