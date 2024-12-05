@@ -14,6 +14,7 @@ public class Order {
 
     private Date date_order;
     private String status;
+    private String virtualStatus;  // Stato virtuale per la visualizzazione (non salvato nel DB)
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -54,6 +55,13 @@ public class Order {
     }
     public void setUser(User user) {
         this.user = user;
+    }
+    public String getVirtualStatus() {
+        return virtualStatus;
+    }
+
+    public void setVirtualStatus(String virtualStatus) {
+        this.virtualStatus = virtualStatus;
     }
 
 }

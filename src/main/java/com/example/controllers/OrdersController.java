@@ -3,6 +3,7 @@ package com.example.controllers;
 import com.example.models.*;
 import com.example.repositories.OrderDetailsRepository;
 import com.example.repositories.OrderRepository;
+import com.example.repositories.StoreRepository;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import com.example.repositories.CartRepository;
@@ -18,9 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,6 +46,8 @@ public class OrdersController {
     private OrderDetailsRepository orderDetailsRepository;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private StoreRepository storeRepository;
 
     @GetMapping("/do_order")
     public String doOrder(@RequestParam Map<String, String> quantities, HttpSession session, Model model) {
@@ -170,5 +173,57 @@ public class OrdersController {
         redirectAttributes.addFlashAttribute("message", "Prodotto rimosso con successo!");
         return "redirect:/homepage";
     }
+
+    @GetMapping("/orders_for_provider")
+    public String ordersForProvider(HttpSession session, Model model, RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute("user");
+        List<Store> stores = storeRepository.findByProvider(user);
+        List<Order> orders = new ArrayList<>();
+
+        Set<Long> processedOrders = new HashSet<>(); // Per evitare duplicati
+
+        for (Store store : stores) {
+            List<Order_Details> orderDetails = orderDetailsRepository.findByStore(store);
+
+            for (Order_Details orderDetail : orderDetails) {
+                Order order = orderDetail.getOrder();
+
+                if (processedOrders.contains(order.getId())) {
+                    continue;
+                }
+
+                orders.add(order);
+                processedOrders.add(order.getId());
+            }
+        }
+        for (Order order : orders) {
+            List<Order_Details> orderDetails = orderDetailsRepository.findByOrderId(order.getId());
+            int hasS = 0;  // Assumiamo che l'ordine sia completato (C) fin dall'inizio
+
+            for (Order_Details orderDetail : orderDetails) {
+                // Verifica se il prodotto ha stato "S" e se appartiene al fornitore corretto
+                if (orderDetail.getStatus().equals("S") && orderDetail.getStore().getProvider().getId().equals(user.getId()))  {
+                    hasS = 1;  // Se trovi almeno un prodotto con stato "S", setti hasS a 1
+                    break;  // Puoi uscire dal ciclo appena trovi uno stato "S", non è necessario continuare a controllare gli altri dettagli
+                }
+            }
+
+            // Se haS è 1, significa che almeno un prodotto ha stato "S", quindi l'ordine è "S", altrimenti è "C"
+            if (hasS == 0) {
+                order.setVirtualStatus("C");
+            } else {
+                order.setVirtualStatus("S");
+            }
+        }
+
+
+        // Ordina gli ordini per data in ordine decrescente
+        orders.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+
+        // Aggiungi gli ordini al model
+        model.addAttribute("orders", orders);
+        return "provider/orders_page_provider";
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package com.example.repositories;
 
+import com.example.models.Order;
 import com.example.models.Order_Details;
 import com.example.models.Store;
 import com.example.models.User;
@@ -17,6 +18,7 @@ public interface OrderDetailsRepository extends JpaRepository<Order_Details, Lon
     List<Order_Details> findByOrderId(Long orderId);
     List<Order_Details> findByStoreAndStatus(Store store, String status);
     List<Order_Details> findByStore(Store store);
+    List<Order_Details> findByOrderAndStore(Order order, Store store);
     @Transactional
     void delete(Order_Details orderDetail);
 }

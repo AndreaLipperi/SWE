@@ -87,9 +87,16 @@
     </script>
 </head>
 <body>
-<form name="orders" method="post">
-    {% csrf_token %}
+<form name="orders" action="/accept_or_deny_all" method="get">
     <h1>ECCO I DETTAGLI DEL TUO ORDINE</h1>
+    <div id="legenda" style="text-align: left">
+        <h5>Legenda status:</h5>
+        <ul>
+            <li>A-->Accettato</li>
+            <li>R-->Rifiutato</li>
+            <li>S-->In sospeso</li>
+        </ul>
+    </div>
     <div id="datas">
         <div class="grid_titoli">
             <div class="grid_item_titoli">Quantità Ordinata</div>
@@ -100,68 +107,73 @@
             <div class="grid_item_titoli"></div>
             <div class="grid_item_titoli"></div>
         </div>
-        <div class="grid_dati">
-                <div class="grid_item_dati"></div>
-                <div class="grid_item_dati">
-                    <span id="totale" >
-                        €<span class="prezzo_totale"></span>
+        <div class="grid_dati" th:each="order : ${orderDetails}">
+            <div class="grid_item_dati" th:text="${order.quantity}"></div>
+            <div class="grid_item_dati">
+                <span id="totale">
+                    €<span class="prezzo_totale" th:text="${order.getTotalPrice()}"></span>
+                </span>
+                <span id="scontato" th:if="${order.store.discount > 0}">
+                    €<span class="prezzo_totale_scontato" th:text="${order.getPriceDiscounted()}">
                     </span>
-                    <span id="scontato">
-                        €<span class="prezzo_totale_scontato"></span>
-                    </span>
-                </div>
-                <div class="grid_item_dati"></div>
-                <div class="grid_item_dati"></div>
-                <div class="grid_item_dati"><span class="status"></span></div>
-                <div class="grid_item_dati"><a class="accept_link" href="">Accetta ordine prodotto</a></div>
-                <div class="grid_item_dati"><a class="deny_link" href="">Rifiuta ordine prodotto</a></div>
-                <div class="grid_item_dati" id="other_datas"><input type="text" name="order_id" value=""></div>
-
+                </span>
+            </div>
+            <div class="grid_item_dati" th:text="${order.store.descProd}"></div>
+            <div class="grid_item_dati" th:text="${order.store.discount + '%'}"></div>
+            <div class="grid_item_dati"><span class="status_order_txt" th:text="${order.status}"></span></div>
+            <div class="grid_item_dati"><span th:if="${order.status=='S'}"><a th:href="@{/accept_deny_single_product(accept_or_deny=${'accept'}, orderDetailId=${order.id})}">Accetta Ordine Prodotto</a></span></div>
+            <div class="grid_item_dati"><span th:if="${order.status=='S'}"><a th:href="@{/accept_deny_single_product(accept_or_deny=${'deny'}, orderDetailId=${order.id})}">Rifiuta Ordine Prodotto</a></span></div>
         </div>
         COSTO TOTALE ORDINE: <span id="total_cost"></span>
         <div id="btn">
-            <input type="submit" id="accept_order" value="ACCETTA ORDINE"  title="Da questo bottone renderai accettati tutti i prodotti ancora in sospeso">
-            <input type="submit" id="deny_order" value="RIFIUTA ORDINE"  title="Da questo bottone renderai rifiutati tutti i prodotti ancora in sospeso">
-            <input type="submit" id="back_btn" value="INDIETRO" >
+            <input type="hidden" name="action_value" id="action_value">
+            <input type="submit" id="accept_order" value="ACCETTA ORDINE"  title="Da questo bottone renderai accettati tutti i prodotti ancora in sospeso" onclick="setActionValue('accept')">
+            <input type="submit" id="deny_order" value="RIFIUTA ORDINE"  title="Da questo bottone renderai rifiutati tutti i prodotti ancora in sospeso" onclick="setActionValue('deny')">
+            <input type="submit" id="back_btn" value="INDIETRO">
         </div>
     </div>
 </form>
 <script>
-    // Funzione per controllare il valore degli input di tipo "number"
     function showBtn() {
-        var status = document.querySelectorAll(".status");
-        var accept_btn = document.getElementById("accept_order");
-        var deny_btn = document.getElementById("deny_order");
-        var hasStatusS = false;
-        
-        status.forEach((stat, index) => {
-            var accept_link = document.querySelectorAll(".accept_link")[index];
-            var deny_link = document.querySelectorAll(".deny_link")[index];
-            if (stat.textContent === "In sospeso") {
-                accept_link.style.display = "inline";
-                deny_link.style.display = "inline";
-            } else {
-                accept_link.style.display = "none";
-                deny_link.style.display = "none";
-            }
-            if (stat.textContent === "In sospeso") {
-                hasStatusS = true;
-            }
-        });
+    // Prendi tutti gli elementi con la classe "status_order_txt"
+    var statuses = document.querySelectorAll(".status_order_txt");
+    var deny_btn = document.getElementById("deny_order");
+    var accept_btn = document.getElementById("accept_order");
 
-        if (hasStatusS) {
-            accept_btn.style.display = "block";
-            deny_btn.style.display = "block";
-        } else {
-            accept_btn.style.display = "none";
+    let showBtns = false; // Flag per determinare se mostrare i pulsanti
+
+    statuses.forEach(function(status) {
+        if (status.textContent === "A" || status.textContent === "R") {
+            // Se lo stato è "A" o "R", nascondi i pulsanti
             deny_btn.style.display = "none";
+            accept_btn.style.display = "none";
+        } else if (status.textContent === "S") {
+            // Se lo stato è "S", mostra i pulsanti
+            deny_btn.style.display = "block";
+            accept_btn.style.display = "block";
+            showBtns = true; // Setta il flag per mostrare i pulsanti
         }
-    }
-    document.addEventListener('DOMContentLoaded', function() {
+    });
 
+    // Se almeno uno degli ordini è "S", mostra i pulsanti per l'intero ordine
+    if (!showBtns) {
+        deny_btn.style.display = "none";
+        accept_btn.style.display = "none";
+    }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
         // Esegui il controllo iniziale
         showBtn();
     });
+
+    document.getElementById("back_btn").addEventListener("click", function(event) {
+        event.preventDefault(); // Impedisce il comportamento predefinito
+        window.location.href = "/orders_for_provider"; // Reindirizza alla homepage
+    });
+    function setActionValue(actionValue) {
+        document.getElementById('action_value').value = actionValue;
+    }
 </script>
 </body>
 </html>

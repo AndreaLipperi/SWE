@@ -59,6 +59,9 @@
 <body>
 <form name="orders" method="post">
     <h1>ECCO LO STORICO DEI TUOI ORDINI RICEVUTI</h1>
+    <div th:if="${message}" style="color: green;">
+        <p th:text="${message}"></p>
+    </div>
     <div id="datas">
         <div class="grid_titoli">
             <div class="grid_item_titoli">Data Ordine</div>
@@ -66,17 +69,24 @@
             <div class="grid_item_titoli">Status</div>
             <div class="grid_item_titoli"></div>
         </div>
-        <div class="grid_dati">
-            <div class="grid_item_dati">{{ orders_item.data_order }}</div>
-                <div class="grid_item_dati">{{ orders_item.customer }}</div>
-                <div class="grid_item_dati">{{ orders_item.status_order }}</div>
-                <div class="grid_item_dati"><a href="{% url 'order_details_provider' order_id=orders_item.order_id %}">Vedi dettagli ordine</a></div>
-
+        <div class="grid_dati" th:each="order : ${orders}">
+            <div class="grid_item_dati" th:text="${order.date}"></div>
+            <div class="grid_item_dati" th:text="${order.user.username}"></div>
+            <div class="grid_item_dati" th:text="${order.virtualStatus}"></div>
+            <div class="grid_item_dati">
+                <a th:href="@{/order_details_provider(orderId=${order.id})}">Vedi dettagli ordine</a>
+            </div>
         </div>
     </div>
     <div id="btn">
-        <input type="submit" id="back_btn" value="INDIETRO" onclick="setFormAction(event, '{% url 'homepage_provider' %}')">
+        <input type="submit" id="back_btn" value="INDIETRO">
     </div>
 </form>
+<script>
+    document.getElementById("back_btn").addEventListener("click", function(event) {
+        event.preventDefault(); // Impedisce il comportamento predefinito
+        window.location.href = "/homepage"; // Reindirizza alla homepage
+    });
+</script>
 </body>
 </html>
