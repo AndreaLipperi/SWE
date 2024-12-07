@@ -46,6 +46,8 @@ Le classi principali sono suddivise in:
 
 ## Struttura del Progetto
 
+
+```plaintext
 main
 ├── java
 │   └── com
@@ -112,6 +114,7 @@ main
             ├── modify_product_page.html
             ├── orders_details_page_provider.html
             └── orders_page_provider.html
+```
 
 
 ## Tecnologie Utilizzate
