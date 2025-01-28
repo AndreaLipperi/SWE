@@ -1,7 +1,7 @@
 package com.example.services;
 
 import com.example.models.User;
-import com.example.repositories.UserRepository;
+import com.example.ORM.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,22 +12,22 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserDAO userDAO;
 
     // Metodo per salvare un nuovo utente nel database
     public void saveUser(User user) {
-        userRepository.save(user); // Salva l'utente nel database
+        userDAO.save(user); // Salva l'utente nel database
     }
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userDAO.findByUsername(username);
     }
     public List<User> findByType(String userType) {
-        return userRepository.findByType(userType);  // Trova tutti gli utenti per tipo
+        return userDAO.findByType(userType);  // Trova tutti gli utenti per tipo
     }
     public boolean updateUser(User user) {
         try {
             // Recupera l'utente esistente dal database tramite l'ID
-            Optional<User> existingUser = userRepository.findById(user.getId());
+            Optional<User> existingUser = userDAO.findById(user.getId());
 
             if (existingUser.isPresent()) {
                 User userToUpdate = existingUser.get();
@@ -37,7 +37,7 @@ public class UserService {
                 userToUpdate.setUsername(user.getUsername());
 
                 // Salva l'utente aggiornato
-                userRepository.save(userToUpdate);
+                userDAO.save(userToUpdate);
                 return true;
             } else {
                 System.out.println("Utente non trovato con ID: " + user.getId());

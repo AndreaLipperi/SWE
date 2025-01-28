@@ -1,7 +1,7 @@
 package com.example.services;
 
 import com.example.models.Subcategory;
-import com.example.repositories.SubcategoryRepository;
+import com.example.ORM.SubcategoryDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +11,10 @@ import java.util.List;
 public class SubcategoryService {
 
     @Autowired
-    private SubcategoryRepository subcategoryRepository;
+    private SubcategoryDAO subcategoryDAO;
 
     // Trova le sottocategorie per una categoria data
     public List<Subcategory> findByCategoryId(Long categoryId) {
-        return subcategoryRepository.findByCategoryId(categoryId);
+        return subcategoryDAO.findByCategoryId(categoryId);
     }
 }

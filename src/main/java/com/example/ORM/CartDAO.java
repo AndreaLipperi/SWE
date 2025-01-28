@@ -1,4 +1,4 @@
-package com.example.repositories;
+package com.example.ORM;
 
 import com.example.models.Cart;
 import com.example.models.User;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CartRepository extends JpaRepository<Cart, Long> {
+public interface CartDAO extends JpaRepository<Cart, Long> {
     List<Cart> findByUserAndProduct(User user, Store product);
     List<Cart> findByUser(User user);
     List<Cart> findByProduct(Store store);

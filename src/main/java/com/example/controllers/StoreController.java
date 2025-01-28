@@ -1,8 +1,7 @@
 package com.example.controllers;
 
 import com.example.models.*;
-import com.example.repositories.*;
-import com.example.services.CartService;
+import com.example.ORM.*;
 import com.example.services.CategoryService;
 import com.example.services.StoreService;
 import jakarta.servlet.http.HttpSession;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 
 @Controller
@@ -22,28 +19,28 @@ public class StoreController {
     @Autowired
     private StoreService storeService;
     @Autowired
-    private StoreRepository storeRepository;
+    private StoreDAO storeDAO;
     @Autowired
-    private OrderDetailsRepository orderDetailsRepository;
+    private OrderDetailsDAO orderDetailsDAO;
     @Autowired
-    private CartRepository cartRepository;
+    private CartDAO cartDAO;
 
     @Autowired
     private CategoryService categoryService;
     @Autowired
-    private MeasureUnitsRepository measureUnitsRepository;
+    private MeasureUnitsDAO measureUnitsDAO;
     @Autowired
-    private SubcategoryRepository subcategoryRepository;
+    private SubcategoryDAO subcategoryDAO;
 
     @GetMapping("/delete_product")
     public String deleteProduct(@RequestParam("productId") Long id, RedirectAttributes redirectAttributes, HttpSession session) {
-        Store store = storeRepository.findStoreById(id);
+        Store store = storeDAO.findStoreById(id);
         if (store == null) {
             redirectAttributes.addFlashAttribute("error", "Prodotto non trovato");
             return "redirect:/homepage";
         }
 
-        List<Order_Details> orderDetails = orderDetailsRepository.findByStore(store);
+        List<Order_Details> orderDetails = orderDetailsDAO.findByStore(store);
         for (Order_Details orderDetail : orderDetails) {
             if (orderDetail.getStatus().equalsIgnoreCase("S")) {
                 redirectAttributes.addFlashAttribute("error", "Non puoi eliminare questo prodotto perchè c'è un ordine in sospeso con all'interno lo stesso, concludi l'ordine prima di procedere");
@@ -51,10 +48,10 @@ public class StoreController {
             }
         }
 
-        orderDetailsRepository.deleteAll(orderDetails);
-        List<Cart> carts = cartRepository.findByProduct(store);
-        cartRepository.deleteAll(carts);
-        storeRepository.delete(store);
+        orderDetailsDAO.deleteAll(orderDetails);
+        List<Cart> carts = cartDAO.findByProduct(store);
+        cartDAO.deleteAll(carts);
+        storeDAO.delete(store);
 
         redirectAttributes.addFlashAttribute("message", "Prodotto eliminato con successo");
         return "redirect:/homepage";
@@ -62,7 +59,7 @@ public class StoreController {
 
     @GetMapping("/update_product")
     public String updateProduct(@RequestParam("productId") Long id, Model model, HttpSession session) {
-        Store store = storeRepository.findStoreById(id);
+        Store store = storeDAO.findStoreById(id);
         session.setAttribute("store", store);
         model.addAttribute("store", store);
         return "/provider/modify_product_page";
@@ -88,7 +85,7 @@ public class StoreController {
     @GetMapping("/add_product")
     public String addProduct(Model model, HttpSession session) {
         List<Category> categorie = categoryService.getAllCategorie();
-        List<Measure_Unit> measureUnits = measureUnitsRepository.findAll();
+        List<Measure_Unit> measureUnits = measureUnitsDAO.findAll();
         model.addAttribute("categorie", categorie);
         model.addAttribute("unita_misura", measureUnits);
         return "provider/insert_product_page";
@@ -96,10 +93,10 @@ public class StoreController {
     @GetMapping("/add")
     public String add(@RequestParam("subcategories") Long subcategoryId,@RequestParam("quantity") int quantity,@RequestParam("discount") int discount,@RequestParam("desc") String desc,@RequestParam("price") Double price,@RequestParam("unita_misura") Long unitamisuraId, Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        Subcategory subcategory = subcategoryRepository.findById(subcategoryId).get();
-        Measure_Unit measureUnit = measureUnitsRepository.findById(unitamisuraId).get();
+        Subcategory subcategory = subcategoryDAO.findById(subcategoryId).get();
+        Measure_Unit measureUnit = measureUnitsDAO.findById(unitamisuraId).get();
         Store store = new Store(quantity,price,desc,subcategory,user,discount,measureUnit);
-        storeRepository.save(store);
+        storeDAO.save(store);
         model.addAttribute("message", "Prodotto aggiunto con successo");
         return "redirect:/homepage";
     }

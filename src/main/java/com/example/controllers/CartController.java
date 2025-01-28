@@ -1,10 +1,9 @@
 package com.example.controllers;
 
 import com.example.models.Cart;
-import com.example.models.Category;
 import com.example.models.Store;
 import com.example.models.User;
-import com.example.repositories.StoreRepository;
+import com.example.ORM.StoreDAO;
 import com.example.services.CartService;
 import com.example.services.StoreService;
 import com.example.services.UserService;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 
 @Controller
@@ -32,7 +29,7 @@ public class CartController {
     @Autowired
     private StoreService storeService; // Aggiungi il tuo servizio per recuperare il prodotto
     @Autowired
-    private StoreRepository storeRepository;
+    private StoreDAO storeDAO;
 
     // Metodo per aggiungere un prodotto al carrello
     @GetMapping("/cart/add")
@@ -41,7 +38,7 @@ public class CartController {
         // Recupera l'utente dalla sessione
         User user = (User) session.getAttribute("user");// Assume che l'ID utente sia memorizzato come "userId" nella sessione
 
-        Store store = storeRepository.findStoreById(productId);
+        Store store = storeDAO.findStoreById(productId);
         Cart existingCart = cartService.findCartByUserAndProduct(user, store);
         if (existingCart != null) {
             redirectAttributes.addFlashAttribute("error", "Prodotto già nel carrello!");

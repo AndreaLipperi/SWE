@@ -1,11 +1,10 @@
 package com.example.controllers;
 
 
-import ch.qos.logback.core.model.Model;
 import com.example.models.Order;
 import com.example.models.Order_Details;
 import com.example.models.Store;
-import com.example.repositories.*;
+import com.example.ORM.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.models.User;
 import com.example.services.UserService;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -25,15 +23,15 @@ public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderDAO orderDAO;
     @Autowired
-    private OrderDetailsRepository orderDetailsRepository;
+    private OrderDetailsDAO orderDetailsDAO;
     @Autowired
-    private CartRepository cartRepository;
+    private CartDAO cartDAO;
     @Autowired
-    private UserRepository userRepository;
+    private UserDAO userDAO;
     @Autowired
-    private StoreRepository storeRepository;
+    private StoreDAO storeDAO;
 
     // Gestisce la registrazione dell'utente
     @PostMapping("/register")
@@ -91,26 +89,26 @@ public class UserController {
 
         User user = (User) session.getAttribute("user");
         if (user.getType().equals("C") && user.getPsw().equals(password)) {
-            List<Order> orders = orderRepository.findByUserAndStatus(user, "S");
+            List<Order> orders = orderDAO.findByUserAndStatus(user, "S");
             if (!orders.isEmpty()) {
                 redirectAttributes.addFlashAttribute("error", "Non puoi eliminare il tuo account se ha ordini in sospeso, annullali poi eliminca l'account");
                 return "redirect:/homepage";
             } else {
-                List<Order> order = orderRepository.findByUser(user);
+                List<Order> order = orderDAO.findByUser(user);
                 for (Order o : order) {
-                    List<Order_Details> order_details = orderDetailsRepository.findByOrderId(o.getId());
-                    orderDetailsRepository.deleteAll(order_details);
+                    List<Order_Details> order_details = orderDetailsDAO.findByOrderId(o.getId());
+                    orderDetailsDAO.deleteAll(order_details);
                 }
-                orderRepository.deleteAll(order);
-                cartRepository.deleteByUser(user);
+                orderDAO.deleteAll(order);
+                cartDAO.deleteByUser(user);
                 session.removeAttribute("user");
-                userRepository.delete(user);
+                userDAO.delete(user);
             }
         } else if(user.getType().equals("F") && user.getPsw().equals(password)) {
             int control = 0;
-            List<Store> store = storeRepository.findByProvider(user);
+            List<Store> store = storeDAO.findByProvider(user);
             for (Store s : store) {
-                List<Order_Details> order_details = orderDetailsRepository.findByStoreAndStatus(s, "S");
+                List<Order_Details> order_details = orderDetailsDAO.findByStoreAndStatus(s, "S");
                 if (!order_details.isEmpty()) {
                     control = 0;
                 } else {
@@ -119,12 +117,12 @@ public class UserController {
             }
             if (control == 0) {
                 for (Store s : store) {
-                    List<Order_Details> order_details = orderDetailsRepository.findByStore(s);
-                    orderDetailsRepository.deleteAll(order_details);
+                    List<Order_Details> order_details = orderDetailsDAO.findByStore(s);
+                    orderDetailsDAO.deleteAll(order_details);
                 }
-                storeRepository.deleteAll(store);
+                storeDAO.deleteAll(store);
                 session.removeAttribute("user");
-                userRepository.delete(user);
+                userDAO.delete(user);
             } else {
                 redirectAttributes.addFlashAttribute("error", "Non puoi eliminare il tuo account se ha ordini in sospeso, annullali poi eliminca l'account");
                 return "redirect:/homepage";

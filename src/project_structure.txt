@@ -1,0 +1,70 @@
+.
+├── main
+│   ├── java
+│   │   └── com
+│   │       └── example
+│   │           ├── StoreApplication.java
+│   │           ├── controllers
+│   │           │   ├── CartController.java
+│   │           │   ├── ForgotPasswordController.java
+│   │           │   ├── HomeController.java
+│   │           │   ├── HomePageController.java
+│   │           │   ├── LoginController.java
+│   │           │   ├── OrderDetailsController.java
+│   │           │   ├── OrdersController.java
+│   │           │   ├── PageController.java
+│   │           │   ├── StoreController.java
+│   │           │   ├── SubcategoryController.java
+│   │           │   ├── UpdatePswController.java
+│   │           │   └── UserController.java
+│   │           ├── models
+│   │           │   ├── Cart.java
+│   │           │   ├── Category.java
+│   │           │   ├── Measure_Unit.java
+│   │           │   ├── Order.java
+│   │           │   ├── Order_Details.java
+│   │           │   ├── Store.java
+│   │           │   ├── Subcategory.java
+│   │           │   └── User.java
+│   │           ├── repositories
+│   │           │   ├── CartRepository.java
+│   │           │   ├── CategoryRepository.java
+│   │           │   ├── MeasureUnitsRepository.java
+│   │           │   ├── OrderDetailsRepository.java
+│   │           │   ├── OrderRepository.java
+│   │           │   ├── StoreRepository.java
+│   │           │   ├── SubcategoryRepository.java
+│   │           │   └── UserRepository.java
+│   │           └── services
+│   │               ├── CartService.java
+│   │               ├── CategoryService.java
+│   │               ├── OrderDetailsService.java
+│   │               ├── OrderService.java
+│   │               ├── StoreService.java
+│   │               ├── SubcategoryService.java
+│   │               └── UserService.java
+│   └── resources
+│       ├── application.properties
+│       └── templates
+│           ├── account_pages
+│           │   ├── delete_account.html
+│           │   ├── forgot_password.html
+│           │   ├── index.html
+│           │   ├── login_page.html
+│           │   ├── modify_data_account_page.html
+│           │   ├── registration_page.html
+│           │   └── update_psw.html
+│           ├── client
+│           │   ├── cart_page.html
+│           │   ├── homepage_client.html
+│           │   ├── order_details_page_client.html
+│           │   └── orders_page_client.html
+│           └── provider
+│               ├── homepage_provider.html
+│               ├── insert_product_page.html
+│               ├── modify_product_page.html
+│               ├── orders_details_page_provider.html
+│               └── orders_page_provider.html
+└── project_structure.txt
+
+14 directories, 54 files

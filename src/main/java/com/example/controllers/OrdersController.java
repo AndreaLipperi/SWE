@@ -1,29 +1,24 @@
 package com.example.controllers;
 
 import com.example.models.*;
-import com.example.repositories.OrderDetailsRepository;
-import com.example.repositories.OrderRepository;
-import com.example.repositories.StoreRepository;
+import com.example.ORM.OrderDetailsDAO;
+import com.example.ORM.OrderDAO;
+import com.example.ORM.StoreDAO;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
-import com.example.repositories.CartRepository;
+import com.example.ORM.CartDAO;
 import com.example.services.CartService;
 import com.example.services.OrderDetailsService;
 import com.example.services.OrderService;
-import com.example.services.StoreService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -37,17 +32,17 @@ public class OrdersController {
     private OrderService orderService;
 
     @Autowired
-    private CartRepository cartRepository;
+    private CartDAO cartDAO;
     @Autowired
     private OrderDetailsService orderDetailsService;
 
     private static final Logger logger = LoggerFactory.getLogger(OrdersController.class);
     @Autowired
-    private OrderDetailsRepository orderDetailsRepository;
+    private OrderDetailsDAO orderDetailsDAO;
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderDAO orderDAO;
     @Autowired
-    private StoreRepository storeRepository;
+    private StoreDAO storeDAO;
 
     @GetMapping("/do_order")
     public String doOrder(@RequestParam Map<String, String> quantities, HttpSession session, Model model) {
@@ -74,7 +69,7 @@ public class OrdersController {
                 int quantity = Integer.parseInt(quantities.get(cartId));
 
                 if (quantity > 0) {
-                    Cart cart = cartRepository.findById(cartIdLong)
+                    Cart cart = cartDAO.findById(cartIdLong)
                             .orElseThrow(() -> new IllegalArgumentException("Carrello non trovato"));
 
                     // Crea i dettagli dell'ordine
@@ -155,19 +150,19 @@ public class OrdersController {
     public String cancelOrder(HttpSession session, Model model,
                               RedirectAttributes redirectAttributes) {
         Order order = (Order) session.getAttribute("order");
-        List<Order_Details> order_details = orderDetailsRepository.findByOrderId(order.getId());
+        List<Order_Details> order_details = orderDetailsDAO.findByOrderId(order.getId());
 
         for (Order_Details order_detail : order_details) {
             if (order_detail.getStatus().equals("S")) {
-                orderDetailsRepository.delete(order_detail);
+                orderDetailsDAO.delete(order_detail);
             }
         }
-        List<Order_Details> order_details_canceled = orderDetailsRepository.findByOrderId(order.getId());
+        List<Order_Details> order_details_canceled = orderDetailsDAO.findByOrderId(order.getId());
         if (order_details_canceled.isEmpty()) {
-            orderRepository.delete(order);
+            orderDAO.delete(order);
         } else {
             order.setStatus("C");
-            orderRepository.save(order);
+            orderDAO.save(order);
         }
         session.removeAttribute("order");
         redirectAttributes.addFlashAttribute("message", "Prodotto rimosso con successo!");
@@ -177,13 +172,13 @@ public class OrdersController {
     @GetMapping("/orders_for_provider")
     public String ordersForProvider(HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("user");
-        List<Store> stores = storeRepository.findByProvider(user);
+        List<Store> stores = storeDAO.findByProvider(user);
         List<Order> orders = new ArrayList<>();
 
         Set<Long> processedOrders = new HashSet<>(); // Per evitare duplicati
 
         for (Store store : stores) {
-            List<Order_Details> orderDetails = orderDetailsRepository.findByStore(store);
+            List<Order_Details> orderDetails = orderDetailsDAO.findByStore(store);
 
             for (Order_Details orderDetail : orderDetails) {
                 Order order = orderDetail.getOrder();
@@ -197,7 +192,7 @@ public class OrdersController {
             }
         }
         for (Order order : orders) {
-            List<Order_Details> orderDetails = orderDetailsRepository.findByOrderId(order.getId());
+            List<Order_Details> orderDetails = orderDetailsDAO.findByOrderId(order.getId());
             int hasS = 0;  // Assumiamo che l'ordine sia completato (C) fin dall'inizio
 
             for (Order_Details orderDetail : orderDetails) {

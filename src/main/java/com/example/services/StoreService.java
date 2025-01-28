@@ -3,8 +3,8 @@ package com.example.services;
 import com.example.models.Category;
 import com.example.models.Store;
 import com.example.models.User;
-import com.example.repositories.CategoryRepository;
-import com.example.repositories.StoreRepository;
+import com.example.ORM.CategoryDAO;
+import com.example.ORM.StoreDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,26 +12,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.Optional;
 
 
 @Service
 public class StoreService {
     @Autowired
-    private StoreRepository storeRepository;
+    private StoreDAO storeDAO;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryDAO categoryDAO;
 
     public Map<Category, List<Store>> getStoresGroupedByCategory(Long subcategoryId) {
         List<Store> stores;
         if (subcategoryId != null) {
             // Se è stato fornito un ID di sottocategoria, filtra per sottocategoria
-            stores = storeRepository.findBySubcategoryId(subcategoryId);
+            stores = storeDAO.findBySubcategoryId(subcategoryId);
         } else {
             // Altrimenti prendi tutti i negozi
-            stores = storeRepository.findAll();
+            stores = storeDAO.findAll();
         }
 
         // Creiamo una mappa per raggruppare i prodotti per categoria
@@ -50,7 +49,7 @@ public class StoreService {
     public Map<Category, List<Store>> getStoresGroupedByCategoryForProv(Long subcategoryId, User user) {
         // Ottieni i negozi per il provider corrente
         // Recupera tutti i negozi per il fornitore
-        List<Store> stores = storeRepository.findByProvider(user);
+        List<Store> stores = storeDAO.findByProvider(user);
 
         if (subcategoryId != null) {
             // Se è stato fornito un ID di sottocategoria, filtra i negozi per sottocategoria
@@ -76,7 +75,7 @@ public class StoreService {
     public boolean updateStore(Store store) {
         try {
             // Recupera l'utente esistente dal database tramite l'ID
-            Optional<Store> existingStore = storeRepository.findById(store.getId());
+            Optional<Store> existingStore = storeDAO.findById(store.getId());
 
             if (existingStore.isPresent()) {
                 Store storeToUpdate = existingStore.get();
@@ -88,7 +87,7 @@ public class StoreService {
                 storeToUpdate.setDescProd(store.getDescProd());
 
                 // Salva l'utente aggiornato
-                storeRepository.save(storeToUpdate);
+                storeDAO.save(storeToUpdate);
                 return true;
             } else {
                 System.out.println("Store non trovato");
