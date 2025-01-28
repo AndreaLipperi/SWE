@@ -53,7 +53,7 @@ main
 │   └── com
 │       └── example
 │           ├── StoreApplication.java
-│           ├── controllers
+│           ├── Controllers
 │           │   ├── CartController.java
 │           │   ├── ForgotPasswordController.java
 │           │   ├── HomeController.java
@@ -66,7 +66,7 @@ main
 │           │   ├── SubcategoryController.java
 │           │   ├── UpdatePswController.java
 │           │   └── UserController.java
-│           ├── models
+│           ├── Models
 │           │   ├── Cart.java
 │           │   ├── Category.java
 │           │   ├── Measure_Unit.java
@@ -75,16 +75,16 @@ main
 │           │   ├── Store.java
 │           │   ├── Subcategory.java
 │           │   └── User.java
-│           ├── repositories
-│           │   ├── CartRepository.java
-│           │   ├── CategoryRepository.java
-│           │   ├── MeasureUnitsRepository.java
-│           │   ├── OrderDetailsRepository.java
-│           │   ├── OrderRepository.java
-│           │   ├── StoreRepository.java
-│           │   ├── SubcategoryRepository.java
-│           │   └── UserRepository.java
-│           └── services
+│           ├── ORM
+│           │   ├── CartDAO.java
+│           │   ├── CategoryDAO.java
+│           │   ├── MeasureUnitsDAO.java
+│           │   ├── OrderDetailsDAO.java
+│           │   ├── OrderDAO.java
+│           │   ├── StoreDAO.java
+│           │   ├── SubcategoryDAO.java
+│           │   └── UserDAO.java
+│           └── Services
 │               ├── CartService.java
 │               ├── CategoryService.java
 │               ├── OrderDetailsService.java
